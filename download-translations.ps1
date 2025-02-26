@@ -8,10 +8,11 @@ $headers = @{
 
 $body = @{
     format = "xliff"
-    original_filenames = $true
-    directory_prefix = "src/locale/"
-    filter_langs = @("en", "es")
-    export_empty_as = "skip"
+    original_filenames = $false
+    bundle_structure = "src/locale/%LANG_ISO%.%FORMAT%"
+    filter_langs = @("fr", "en", "ar")
+    export_empty_as = "base"
+    replace_breaks = $false
 } | ConvertTo-Json
 
 $downloadUrl = "https://api.lokalise.com/api2/projects/$projectId/files/download"
@@ -22,7 +23,7 @@ $response = Invoke-RestMethod -Uri $downloadUrl -Method Post -Headers $headers -
 Invoke-WebRequest -Uri $response.bundle_url -OutFile "translations.zip"
 
 # Décompresser le fichier
-Expand-Archive -Path "translations.zip" -DestinationPath "src/locale" -Force
+Expand-Archive -Path "translations.zip" -DestinationPath "." -Force
 
 # Nettoyer
 Remove-Item "translations.zip"
