@@ -1,0 +1,67 @@
+name: Automated Translations
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**/*.html'
+      - 'src/**/*.ts'
+      - '!src/locale/**'
+
+jobs:
+  update-translations:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Extract i18n strings
+        run: npm run i18n:extract
+        
+      - name: Upload to Lokalise
+        env:
+          LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
+          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
+        run: |
+          $env:token = "${{ secrets.LOKALISE_TOKEN }}"
+          $env:projectId = "${{ secrets.LOKALISE_PROJECT_ID }}"
+          ./upload-translations.ps1
+        shell: pwsh
+        
+      - name: Wait for translations (5 minutes)
+        run: Start-Sleep -Seconds 300
+        shell: pwsh
+        
+      - name: Download translations
+        env:
+          LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
+          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
+        run: |
+          $env:token = "${{ secrets.LOKALISE_TOKEN }}"
+          $env:projectId = "${{ secrets.LOKALISE_PROJECT_ID }}"
+          ./download-translations.ps1
+        shell: pwsh
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update translations'
+          title: 'Update translations'
+          body: |
+            Automated translation update from Lokalise
+            - Extracted new strings
+            - Updated translations for all languages
+          branch: update-translations
+          base: main
