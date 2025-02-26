@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'src/**/*.html'
-      - 'src/**/*.ts'
-      - '!src/locale/**'
 
 jobs:
   update-translations:
