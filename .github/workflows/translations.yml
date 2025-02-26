@@ -24,7 +24,7 @@ jobs:
           node-version: '18'
           
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --legacy-peer-deps
         
       - name: Extract i18n strings
         run: npm run i18n:extract
