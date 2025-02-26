@@ -48,8 +48,8 @@ jobs:
           ./upload-translations.ps1
         shell: pwsh
         
-      - name: Wait for translations (5 minutes)
-        run: Start-Sleep -Seconds 300
+      - name: Wait for translations (2 minutes)
+        run: Start-Sleep -Seconds 120
         shell: pwsh
         
       - name: Download translations
