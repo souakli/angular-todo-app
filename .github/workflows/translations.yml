@@ -23,11 +23,24 @@ jobs:
         with:
           node-version: '18'
           
+      - name: Debug - List files
+        run: dir
+        shell: cmd
+          
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          npm install -g @angular/cli
+          npm ci --legacy-peer-deps
+        
+      - name: Debug - Check Angular CLI
+        run: ng version
+        shell: cmd
         
       - name: Extract i18n strings
-        run: npm run i18n:extract
+        run: |
+          npm run i18n:extract
+          dir src\locale
+        shell: cmd
         
       - name: Upload to Lokalise
         env:
