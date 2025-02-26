@@ -1,0 +1,37 @@
+name: Lokalise Webhook Translations
+
+on:
+  repository_dispatch:
+    types: [lokalise-update]
+
+jobs:
+  update-translations:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Download translations
+        env:
+          LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
+          LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
+        run: |
+          $env:token = "${{ secrets.LOKALISE_TOKEN }}"
+          $env:projectId = "${{ secrets.LOKALISE_PROJECT_ID }}"
+          ./download-translations.ps1
+        shell: pwsh
+        
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore: update translations from Lokalise'
+          title: 'Update translations from Lokalise'
+          body: |
+            Automated translation update triggered by Lokalise webhook
+            - New translations have been downloaded
+            - Please review the changes
+          branch: update-translations-webhook
+          base: main

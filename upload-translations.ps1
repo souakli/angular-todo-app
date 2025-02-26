@@ -10,8 +10,12 @@ $fileContentBase64 = [System.Convert]::ToBase64String($fileContent)
 $body = @{
     filename = "messages.xlf"
     data = $fileContentBase64
-    lang_iso = "fr"
+    lang_iso = "fr"  # On utilise l'anglais comme langue source
+    detect_icu_plurals = $true
     convert_placeholders = $true
+    replace_modified = $false
+    apply_tm = $true
+    tags = @("angular")
 } | ConvertTo-Json
 
 $headers = @{
