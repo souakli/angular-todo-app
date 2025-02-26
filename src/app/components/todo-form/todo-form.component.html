@@ -1,7 +1,11 @@
 <div class="todo-form">
   <h2 i18n="@@todoFormTitle">Create a new task</h2>
   <form (ngSubmit)="onSubmit()">
-    <input type="text" [(ngModel)]="newTodo" name="newTodo" i18n-placeholder="@@todoInputPlaceholder" placeholder="Write your task here">
-    <button type="submit" i18n="@@addTaskButton">Create Task</button>
+    <input type="text" 
+           [(ngModel)]="newTodo" 
+           name="newTodo" 
+           i18n-placeholder="@@todoInputPlaceholder" 
+           placeholder="Type your new task here">
+    <button type="submit" i18n="@@addTaskButton">Create New Task</button>
   </form>
 </div>
