@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   update-translations:
@@ -23,45 +24,31 @@ jobs:
           
       - name: Install dependencies
         run: |
+          npm install
           npm install -g @angular/cli
-          npm ci --legacy-peer-deps
-          npm install @lokalise/node-api unzipper --legacy-peer-deps
-        
-      - name: Extract i18n strings
+          
+      - name: Extract messages
         run: |
-          npm run i18n:extract
-          dir src\locale
-        shell: cmd
-        
-      - name: Upload to Lokalise
+          ng extract-i18n --output-path src/locale
+          
+      - name: Upload translations
         env:
           LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
           node upload-translations.js
-        shell: pwsh
-        
-      - name: Wait for translations (2 minutes)
-        run: Start-Sleep -Seconds 120
-        shell: pwsh
-        
+          
       - name: Download translations
         env:
           LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
           node download-translations.js
-        shell: pwsh
-        
-      - name: Configure Git
+          
+      - name: Commit changes
         run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
-        shell: pwsh
-        
-      - name: Commit and push changes
-        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
           git add src/locale/*
-          git commit -m "chore: update translations"
+          git commit -m "chore: update translations" || echo "No changes to commit"
           git push origin main
-        shell: pwsh
