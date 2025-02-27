@@ -28,7 +28,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
+            "outputPath": "dist/fr",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -71,16 +71,16 @@
               "namedChunks": true
             },
             "fr": {
-              "outputPath": "dist/fr",
-              "localize": false
+              "localize": ["fr"],
+              "outputPath": "dist/fr"
             },
             "en": {
-              "outputPath": "dist/en",
-              "localize": ["en"]
+              "localize": ["en"],
+              "outputPath": "dist/en"
             },
             "ar": {
-              "outputPath": "dist/ar",
-              "localize": ["ar"]
+              "localize": ["ar"],
+              "outputPath": "dist/ar"
             }
           },
           "defaultConfiguration": "production"
@@ -89,28 +89,22 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-todo-app:build:production"
+              "browserTarget": "angular-todo-app:build:production"
             },
             "development": {
-              "buildTarget": "angular-todo-app:build:development"
+              "browserTarget": "angular-todo-app:build:development"
             },
             "fr": {
-              "buildTarget": "angular-todo-app:build:fr"
+              "browserTarget": "angular-todo-app:build:fr"
             },
             "en": {
-              "buildTarget": "angular-todo-app:build:en"
+              "browserTarget": "angular-todo-app:build:en"
             },
             "ar": {
-              "buildTarget": "angular-todo-app:build:ar"
+              "browserTarget": "angular-todo-app:build:ar"
             }
           },
           "defaultConfiguration": "development"
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "buildTarget": "angular-todo-app:build"
-          }
         }
       }
     }
