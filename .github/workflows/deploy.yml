@@ -14,12 +14,16 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
-          persist-credentials: false
-      
+          
       # Cache npm dependencies
       - name: Cache node modules
         uses: actions/cache@v3
@@ -42,21 +46,21 @@ jobs:
       - name: Build for all languages
         run: |
           # Build French version (default)
-          ng build --configuration=production
+          ng build --configuration=production --base-href="/angular-todo-app/"
           
           # Build English version
-          ng build --configuration=production,en --output-path=dist/en
+          ng build --configuration=production,en --base-href="/angular-todo-app/en/" --output-path=dist/en
           
           # Build Arabic version
-          ng build --configuration=production,ar --output-path=dist/ar
+          ng build --configuration=production,ar --base-href="/angular-todo-app/ar/" --output-path=dist/ar
           
           # Create language switcher script
           echo "const userLang = navigator.language || navigator.userLanguage;
-          let redirectPath = '/';
+          let redirectPath = '/angular-todo-app/';
           if (userLang.startsWith('en')) {
-            redirectPath = '/en/';
+            redirectPath += 'en/';
           } else if (userLang.startsWith('ar')) {
-            redirectPath = '/ar/';
+            redirectPath += 'ar/';
           }
           window.location.href = redirectPath;" > dist/redirect.js
           
@@ -72,14 +76,15 @@ jobs:
               <p>Redirecting to your preferred language...</p>
             </body>
           </html>" > dist/index.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
           
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
-          enable_jekyll: false
-          allow_empty_commit: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'deploy: update site'
+        id: deployment
+        uses: actions/deploy-pages@v4
