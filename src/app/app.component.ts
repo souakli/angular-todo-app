@@ -9,6 +9,7 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
   imports: [CommonModule, RouterOutlet, TodoListComponent],
   template: `
     <div class="app-container">
+      <h1 i18n>Todo List</h1>
       <app-todo-list></app-todo-list>
     </div>
   `,
@@ -18,8 +19,13 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
       background-color: #f5f5f5;
       padding: 1rem;
     }
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 2rem;
+    }
   `]
 })
 export class AppComponent {
-  title = 'Todo App';
+  title = 'Todo List';
 }
