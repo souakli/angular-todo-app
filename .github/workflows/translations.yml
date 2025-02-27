@@ -10,7 +10,6 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: write
-      pull-requests: write
     
     steps:
       - uses: actions/checkout@v3
@@ -60,15 +59,9 @@ jobs:
           git config --global user.name "github-actions[bot]"
         shell: pwsh
         
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: 'chore: update translations'
-          title: 'Update translations'
-          body: |
-            Automated translation update from Lokalise
-            - Extracted new strings
-            - Updated translations for all languages
-          branch: update-translations
-          base: main
+      - name: Commit and push changes
+        run: |
+          git add src/locale/*
+          git commit -m "chore: update translations"
+          git push origin main
+        shell: pwsh
