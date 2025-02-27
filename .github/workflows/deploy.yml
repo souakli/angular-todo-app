@@ -28,22 +28,22 @@ jobs:
         run: |
           npm install -g @angular/cli
           npm install --legacy-peer-deps
-          npm install angular-cli-ghpages --save-dev --legacy-peer-deps
+          npm install -g angular-cli-ghpages --legacy-peer-deps
           
       - name: Build for all languages
         run: |
           # Build French version (default)
-          ng build --configuration=production --base-href="/angular-todo-app/"
+          ng build --configuration=production --base-href="https://souakli.github.io/angular-todo-app/"
           
           # Build English version
-          ng build --configuration=production,en --base-href="/angular-todo-app/en/" --output-path=dist/en
+          ng build --configuration=production,en --base-href="https://souakli.github.io/angular-todo-app/en/" --output-path=dist/en
           
           # Build Arabic version
-          ng build --configuration=production,ar --base-href="/angular-todo-app/ar/" --output-path=dist/ar
+          ng build --configuration=production,ar --base-href="https://souakli.github.io/angular-todo-app/ar/" --output-path=dist/ar
           
           # Create language switcher script
           echo "const userLang = navigator.language || navigator.userLanguage;
-          let redirectPath = '/angular-todo-app/';
+          let redirectPath = 'https://souakli.github.io/angular-todo-app/';
           if (userLang.startsWith('en')) {
             redirectPath += 'en/';
           } else if (userLang.startsWith('ar')) {
@@ -65,7 +65,7 @@ jobs:
           </html>" > dist/index.html
           
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist
-          branch: gh-pages
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          npx angular-cli-ghpages --dir=dist --repo=https://github.com/souakli/angular-todo-app.git --name="GitHub Actions Bot" --email=actions@github.com --branch=gh-pages --no-silent
