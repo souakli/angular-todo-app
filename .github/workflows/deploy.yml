@@ -18,6 +18,16 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      # Cache npm dependencies
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -26,9 +36,9 @@ jobs:
           
       - name: Install dependencies
         run: |
-          npm install -g @angular/cli
           npm install --legacy-peer-deps
-          npm install -g angular-cli-ghpages --legacy-peer-deps
+          npm install -g @angular/cli
+          npm install -g angular-cli-ghpages
           
       - name: Build for all languages
         run: |
@@ -65,7 +75,9 @@ jobs:
           </html>" > dist/index.html
           
       - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git config --global user.name "GitHub Actions Bot"
-          git config --global user.email "actions@github.com"
-          npx angular-cli-ghpages --dir=dist --repo=https://github.com/souakli/angular-todo-app.git --name="GitHub Actions Bot" --email=actions@github.com --branch=gh-pages --no-silent
+          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          npx angular-cli-ghpages --dir=dist --repo=https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git --name="${{ github.actor }}" --email="${{ github.actor }}@users.noreply.github.com" --branch=gh-pages --no-silent
