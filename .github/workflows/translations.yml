@@ -8,6 +8,9 @@ on:
 jobs:
   update-translations:
     runs-on: windows-latest
+    permissions:
+      contents: write
+      pull-requests: write
     
     steps:
       - uses: actions/checkout@v3
@@ -49,6 +52,12 @@ jobs:
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
           node download-translations.js
+        shell: pwsh
+        
+      - name: Configure Git
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
         shell: pwsh
         
       - name: Create Pull Request
