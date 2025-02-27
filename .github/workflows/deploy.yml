@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
       
       # Cache npm dependencies
       - name: Cache node modules
@@ -38,26 +38,25 @@ jobs:
         run: |
           npm install --legacy-peer-deps
           npm install -g @angular/cli
-          npm install -g angular-cli-ghpages
           
       - name: Build for all languages
         run: |
           # Build French version (default)
-          ng build --configuration=production --base-href="https://souakli.github.io/angular-todo-app/"
+          ng build --configuration=production
           
           # Build English version
-          ng build --configuration=production,en --base-href="https://souakli.github.io/angular-todo-app/en/" --output-path=dist/en
+          ng build --configuration=production,en --output-path=dist/en
           
           # Build Arabic version
-          ng build --configuration=production,ar --base-href="https://souakli.github.io/angular-todo-app/ar/" --output-path=dist/ar
+          ng build --configuration=production,ar --output-path=dist/ar
           
           # Create language switcher script
           echo "const userLang = navigator.language || navigator.userLanguage;
-          let redirectPath = 'https://souakli.github.io/angular-todo-app/';
+          let redirectPath = '/';
           if (userLang.startsWith('en')) {
-            redirectPath += 'en/';
+            redirectPath = '/en/';
           } else if (userLang.startsWith('ar')) {
-            redirectPath += 'ar/';
+            redirectPath = '/ar/';
           }
           window.location.href = redirectPath;" > dist/redirect.js
           
@@ -75,9 +74,12 @@ jobs:
           </html>" > dist/index.html
           
       - name: Deploy to GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          npx angular-cli-ghpages --dir=dist --repo=https://${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git --name="${{ github.actor }}" --email="${{ github.actor }}@users.noreply.github.com" --branch=gh-pages --no-silent
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          enable_jekyll: false
+          allow_empty_commit: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'deploy: update site'
