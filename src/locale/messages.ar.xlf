@@ -7,10 +7,10 @@
     <body>
       <trans-unit id="6479879428930588857" datatype="html">
         <source>Nouvelle tâche</source>
-        <target>djdid</target>
+        <target>Nouvelle tâche</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">16,17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2721374329445264606" datatype="html">
@@ -18,15 +18,15 @@
         <target>Description (optionnel)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">24,25</context>
         </context-group>
       </trans-unit>
       <trans-unit id="70397346439942337" datatype="html">
         <source>Ajouter</source>
-        <target>zid</target>
+        <target>Ajouter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">27,28</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3470560235497686067" datatype="html">
@@ -34,7 +34,7 @@
         <target>lista ta3 la3fayess</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">14,15</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7265067825036320518" datatype="html">
@@ -42,7 +42,7 @@
         <target>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Complétées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">17,19</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3062171555746716232" datatype="html">
@@ -50,7 +50,80 @@
         <target>makayen khedma asahbi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">25,26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newTask" datatype="html">
+        <source>Nouvelle tâche</source>
+        <target>Nouvelle tâche</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="noTasks" datatype="html">
+        <source>Aucune tâche pour le moment. Ajoutez-en une !</source>
+        <target>Aucune tâche pour le moment. Ajoutez-en une !</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="taskStatus" datatype="html">
+        <source>En cours: {{tasks}} | Complétées: {{completed}}</source>
+        <target>En cours: {{tasks}} | Complétées: {{completed}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="newTaskPlaceholder" datatype="html">
+        <source>Nouvelle tâche</source>
+        <target>djdid</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="addTaskButton" datatype="html">
+        <source>Ajouter</source>
+        <target>zid</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="todoStatus" datatype="html">
+        <source>En cours: {{0}} | Complétées: {{1}}</source>
+        <target>ghadiEn cours: {{0}} | Complétées: 
+{{1}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="emptyTodoList" datatype="html">
+        <source>Aucune tâche pour le moment. Ajoutez-en une !</source>
+        <target>Aucune tâche pour le moment. Ajoutez-en une !</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="toggleTaskTitle" datatype="html">
+        <source>Marquer comme {{0}}</source>
+        <target>Marquer comme {{0}}</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="deleteTaskButton" datatype="html">
+        <source>Supprimer la tâche</source>
+        <target>Supprimer la tâche</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
     </body>
