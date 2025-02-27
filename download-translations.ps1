@@ -1,45 +1,38 @@
-$token = "c7184a5189a10521e223c3a3339e06b0272edada"
+$token = "734e16be07a04592870ce8847b9213ae1c601c6f"
 $projectId = "7835424467bf5c965b0411.50285011"
 
 $headers = @{
     "X-Api-Token" = $token
-    "Content-Type" = "application/json"
 }
-
-$body = @{
-    format = "xliff"
-    original_filenames = $false
-    bundle_structure = "%LANG_ISO%.%FORMAT%"
-    filter_langs = @("fr", "en", "ar")
-    export_empty_as = "base"
-    replace_breaks = $false
-    include_tags = @("angular")
-    export_sort = "first_added"
-    indentation = "2sp"
-    directory_prefix = "src/locale/"
-} | ConvertTo-Json
 
 $downloadUrl = "https://api.lokalise.com/api2/projects/$projectId/files/download"
 
-$response = Invoke-RestMethod -Uri $downloadUrl -Method Post -Headers $headers -Body $body
+# Corps de la requête minimal
+$body = "format=xliff&langs=fr,en,ar"
 
-Write-Host "Response from Lokalise:"
-Write-Host ($response | ConvertTo-Json)
+Write-Host "Sending request to Lokalise..."
+Write-Host "URL: $downloadUrl"
+Write-Host "Body: $body"
 
-# Le lien de téléchargement est dans $response.bundle_url
-if ($response.bundle_url) {
-    Write-Host "Downloading translations..."
-    Invoke-WebRequest -Uri $response.bundle_url -OutFile "translations.zip"
+try {
+    $response = Invoke-RestMethod -Uri $downloadUrl -Method Post -Headers $headers -Body $body -ContentType "application/x-www-form-urlencoded"
+    Write-Host "Response:"
+    $response | ConvertTo-Json
     
-    Write-Host "Extracting translations..."
-    Expand-Archive -Path "translations.zip" -DestinationPath "." -Force
-    
-    Write-Host "Cleaning up..."
-    Remove-Item "translations.zip"
-    
-    Write-Host "Done!"
-} else {
-    Write-Error "No bundle URL in response"
-    Write-Error ($response | ConvertTo-Json)
+    if ($response.bundle_url) {
+        Write-Host "Downloading bundle from: $($response.bundle_url)"
+        Invoke-WebRequest -Uri $response.bundle_url -OutFile "translations.zip"
+        
+        Write-Host "Extracting translations..."
+        Expand-Archive -Path "translations.zip" -DestinationPath "src/locale" -Force
+        Remove-Item "translations.zip"
+        Write-Host "Translations downloaded and extracted successfully!"
+    } else {
+        throw "No bundle URL in response"
+    }
+} catch {
+    Write-Host "Error: $_"
+    Write-Host "Status Code: $($_.Exception.Response.StatusCode.value__)"
+    Write-Host "Status Description: $($_.Exception.Response.StatusDescription)"
     exit 1
 }

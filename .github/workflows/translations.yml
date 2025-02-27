@@ -19,18 +19,11 @@ jobs:
         with:
           node-version: '18'
           
-      - name: Debug - List files
-        run: dir
-        shell: cmd
-          
       - name: Install dependencies
         run: |
           npm install -g @angular/cli
           npm ci --legacy-peer-deps
-        
-      - name: Debug - Check Angular CLI
-        run: ng version
-        shell: cmd
+          npm install @lokalise/node-api unzipper --legacy-peer-deps
         
       - name: Extract i18n strings
         run: |
@@ -43,9 +36,7 @@ jobs:
           LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
-          $env:token = "${{ secrets.LOKALISE_TOKEN }}"
-          $env:projectId = "${{ secrets.LOKALISE_PROJECT_ID }}"
-          ./upload-translations.ps1
+          node upload-translations.js
         shell: pwsh
         
       - name: Wait for translations (2 minutes)
@@ -57,9 +48,7 @@ jobs:
           LOKALISE_TOKEN: ${{ secrets.LOKALISE_TOKEN }}
           LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
         run: |
-          $env:token = "${{ secrets.LOKALISE_TOKEN }}"
-          $env:projectId = "${{ secrets.LOKALISE_PROJECT_ID }}"
-          ./download-translations.ps1
+          node download-translations.js
         shell: pwsh
         
       - name: Create Pull Request
