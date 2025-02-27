@@ -1,21 +1,23 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches:
-      - main
   workflow_run:
     workflows: ["Automated Translations"]
     types:
       - completed
+    branches:
+      - main
 
 jobs:
   build-and-deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -25,8 +27,8 @@ jobs:
       - name: Install dependencies
         run: |
           npm install -g @angular/cli
-          npm ci --legacy-peer-deps
-          npm install angular-cli-ghpages --save-dev
+          npm install --legacy-peer-deps
+          npm install angular-cli-ghpages --save-dev --legacy-peer-deps
           
       - name: Build for all languages
         run: |
