@@ -43,7 +43,7 @@ jobs:
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
         run: |
-          echo "const { LokaliseApi } = require('@lokalise/node-api');
+          echo "const LokaliseApi = require('@lokalise/node-api').LokaliseApi;
           const fs = require('fs');
           const apiKey = process.env.LOKALISE_API_KEY;
           const projectId = '7835424467bf5c965b0411.50285011';
@@ -83,7 +83,7 @@ jobs:
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
         run: |
-          echo "const { LokaliseApi } = require('@lokalise/node-api');
+          echo "const LokaliseApi = require('@lokalise/node-api').LokaliseApi;
           const https = require('https');
           const fs = require('fs');
           const unzipper = require('unzipper');
