@@ -69,12 +69,27 @@ jobs:
           cat src/locale/messages.ar.xlf
           echo "Content of local Arabic translations before build:"
           cat src/locale/messages.ar.xlf
+          
+          # Vérifier que la traduction arabe est bien présente
+          if grep -q "makayen khedma asahbi" src/locale/messages.ar.xlf; then
+            echo " La traduction arabe 'makayen khedma asahbi' est bien présente dans le fichier"
+          else
+            echo " La traduction arabe 'makayen khedma asahbi' n'est PAS présente dans le fichier"
+          fi
 
       - name: Build multilingual app
         run: |
           npm run build -- --configuration=production --localize
           echo "Build output structure:"
           ls -R dist/angular-todo-app/browser/
+          
+          # Vérifier le contenu des fichiers HTML générés
+          echo "Contenu du fichier index.html en arabe:"
+          if [ -f "dist/angular-todo-app/browser/ar/index.html" ]; then
+            grep -A 3 -B 3 "makayen" dist/angular-todo-app/browser/ar/index.html || echo "Traduction non trouvée dans le fichier HTML"
+          else
+            echo "Le fichier ar/index.html n'existe pas"
+          fi
 
       - name: List build output
         run: |
