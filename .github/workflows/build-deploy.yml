@@ -74,8 +74,8 @@ jobs:
                   process.exit(1);
               }
           }
-          uploadTranslations();" > upload.js
-          node upload.js
+          uploadTranslations();" > upload.cjs
+          node upload.cjs
 
       # Étape 3: Download des traductions mises à jour
       - name: Download translations
@@ -147,8 +147,8 @@ jobs:
                   process.exit(1);
               }
           }
-          downloadTranslations();" > download.js
-          node download.js
+          downloadTranslations();" > download.cjs
+          node download.cjs
 
       # Étape 4: Commit des nouvelles traductions si elles ont changé
       - name: Commit updated translations
