@@ -98,6 +98,19 @@ jobs:
           echo "Content of downloaded English translations:"
           cat src/locale/messages.en.xlf
           echo "All translations downloaded fresh from Lokalise"
+          
+          # Créer un fichier de marqueur pour indiquer que les traductions ont été mises à jour
+          echo "$(date)" > translation_updated_marker.txt
+
+      - name: Debug translation files
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        run: |
+          echo "Checking for changes in translation files..."
+          git status
+          echo "Differences in Arabic translations:"
+          git diff -- src/locale/messages.ar.xlf || echo "No differences detected"
+          echo "Differences in English translations:"
+          git diff -- src/locale/messages.en.xlf || echo "No differences detected"
 
       - name: Commit and push updated translation files
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
@@ -114,19 +127,21 @@ jobs:
           # Reset to match remote branch
           git reset --hard origin/${{ github.ref_name }}
           
-          # Add and commit the translation files
+          # Add all translation files and marker file
           git add src/locale/messages.*.xlf
+          git add translation_updated_marker.txt
           
-          # Only commit if there are changes
-          if ! git diff --staged --quiet; then
-            git commit -m "Update translations from Lokalise [skip ci]"
-            
-            # Push directly using the token
-            git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
-            echo "Translation files committed and pushed successfully"
-          else
-            echo "No translation changes to commit"
-          fi
+          # Force commit even if git thinks there are no changes
+          git commit -m "Update translations from Lokalise [skip ci]" --allow-empty
+          
+          # Debug information
+          echo "Commit created with status: $?"
+          git log -1
+          
+          # Push directly using the token with force flag
+          git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+          echo "Push completed with status: $?"
+          echo "Translation files committed and pushed successfully"
 
       - name: Build multilingual app
         run: |
