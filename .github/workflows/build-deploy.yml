@@ -27,7 +27,7 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --legacy-peer-deps
 
       # Étape 1: Extraction des traductions avec format spécifié
       - name: Extract i18n messages
@@ -58,7 +58,7 @@ jobs:
 
       # Étape 5: Build de l'application avec toutes les langues
       - name: Build multilingual app
-        run: npm run build -- --localize
+        run: npm run build -- --localize --configuration=production
 
       # Étape 6: Déploiement sur GitHub Pages
       - name: Deploy to GitHub Pages
