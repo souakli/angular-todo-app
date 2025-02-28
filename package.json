@@ -10,9 +10,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:angular-todo-app": "node dist/angular-todo-app/server/server.mjs",
-    "i18n:extract": "if exist src\\locale\\messages.xlf del src\\locale\\messages.xlf && ng extract-i18n --output-path src/locale --format=xlf",
+    "i18n:extract": "if exist src\\locale\\messages.xlf (del src\\locale\\messages.xlf) && ng extract-i18n --output-path src/locale",
     "i18n:upload": "node upload-translations.mjs",
     "i18n:download": "node download-translations.mjs",
+    "i18n:download:fresh": "node download-fresh-translations.mjs",
     "i18n:sync": "npm run i18n:extract && npm run i18n:upload && npm run i18n:download",
     "serve:dist": "http-server dist/angular-todo-app/browser -p 8080"
   },

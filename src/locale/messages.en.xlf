@@ -5,6 +5,38 @@
       <tool tool-id="lokalise.com" tool-name="Lokalise"></tool>
     </header>
     <body>
+      <trans-unit id="3448536624183784632" datatype="html">
+        <source>Liste des tâches</source>
+        <target>zdafa</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6479879428930588857" datatype="html">
+        <source>Nouvelle tâche</source>
+        <target></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2721374329445264606" datatype="html">
+        <source>Description (optionnel)</source>
+        <target></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3400870239794908146" datatype="html">
+        <source> Ajouter </source>
+        <target></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
+          <context context-type="linenumber">32,34</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="1078665948232333643" datatype="html">
         <source>Marquer comme terminé</source>
         <target></target>
@@ -15,7 +47,7 @@
       </trans-unit>
       <trans-unit id="1680693752472612244" datatype="html">
         <source>Supprimer la tâche</source>
-        <target>delete task sami</target>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
           <context context-type="linenumber">29</context>
@@ -29,44 +61,12 @@
           <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2721374329445264606" datatype="html">
-        <source>Description (optionnel)</source>
-        <target>Description</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="3062171555746716232" datatype="html">
         <source> Aucune tâche pour le moment. Ajoutez-en une ! </source>
-        <target>Actually no task to do </target>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">23,25</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3400870239794908146" datatype="html">
-        <source> Ajouter </source>
-        <target>addddd</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">32,34</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3448536624183784632" datatype="html">
-        <source>Liste des tâches</source>
-        <target>dzadazdaz</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6479879428930588857" datatype="html">
-        <source>Nouvelle tâche</source>
-        <target>New task</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
     </body>

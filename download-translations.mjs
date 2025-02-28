@@ -27,28 +27,9 @@ function extractTransUnitIds(xmlContent) {
     return ids;
 }
 
-// Fonction pour filtrer un fichier XLF et ne garder que les trans-units avec des IDs valides
-function filterXlfByValidIds(xmlContent, validIds) {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlContent, 'text/xml');
-    const transUnits = xmlDoc.getElementsByTagName('trans-unit');
-    let removedCount = 0;
-    
-    // Parcourir les trans-units et supprimer ceux qui n'ont pas d'ID valide
-    for (let i = transUnits.length - 1; i >= 0; i--) {
-        const id = transUnits[i].getAttribute('id');
-        if (!validIds.includes(id)) {
-            console.log(`Removing trans-unit with ID ${id} as it's not in the source file`);
-            transUnits[i].parentNode.removeChild(transUnits[i]);
-            removedCount++;
-        }
-    }
-    
-    console.log(`Removed ${removedCount} invalid trans-units`);
-    
-    // Convertir le document XML en chaîne
-    const serializer = new XMLSerializer();
-    return serializer.serializeToString(xmlDoc);
+// Fonction pour attendre un certain temps
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function downloadTranslations() {
@@ -65,37 +46,37 @@ async function downloadTranslations() {
         const validIds = extractTransUnitIds(sourceContent);
         console.log(`Found ${validIds.length} valid translation IDs in source file:`, validIds);
         
-        // Vérifier d'abord si les clés dans Lokalise correspondent aux clés valides
-        try {
-            const keys = await client.keys().list({
-                project_id: projectId,
-                limit: 5000
-            });
-            
-            if (keys.items && keys.items.length > 0) {
-                const lokaliseKeyIds = keys.items.map(key => key.key_name);
-                console.log(`Found ${lokaliseKeyIds.length} keys in Lokalise:`, lokaliseKeyIds);
-                
-                // Vérifier si toutes les clés Lokalise sont valides
-                const invalidKeys = lokaliseKeyIds.filter(id => !validIds.includes(id));
-                if (invalidKeys.length > 0) {
-                    console.log(`⚠️ WARNING: Found ${invalidKeys.length} invalid keys in Lokalise:`, invalidKeys);
-                } else {
-                    console.log('✅ All keys in Lokalise are valid');
+        // Vérifier les clés dans Lokalise
+        console.log('Checking keys in Lokalise...');
+        const keys = await client.keys().list({
+            project_id: projectId,
+            limit: 100
+        });
+        
+        console.log(`Found ${keys.items.length} keys in Lokalise`);
+        
+        // Afficher les traductions pour chaque clé
+        for (const key of keys.items) {
+            console.log(`Key: ${JSON.stringify(key.key_name)}`);
+            if (key.translations) {
+                for (const translation of key.translations) {
+                    console.log(`  ${translation.language_iso}: "${translation.translation || '<empty>'}"`);
                 }
-            } else {
-                console.log('No keys found in Lokalise');
             }
-        } catch (error) {
-            console.error('Error checking Lokalise keys:', error.message);
         }
         
-        const response = await client.files().download(projectId, {
+        // Attendre 5 secondes pour s'assurer que Lokalise a bien traité toutes les modifications
+        console.log('Waiting 5 seconds before downloading...');
+        await sleep(5000);
+        
+        // Forcer une exportation fraîche (non mise en cache)
+        console.log('Creating a fresh export from Lokalise...');
+        const exportResponse = await client.files().download(projectId, {
             format: 'xlf',
             original_filenames: false,
             directory_prefix: '',
             filter_langs: ['fr', 'en', 'ar'],
-            export_empty_as: 'skip',
+            export_empty_as: 'empty',
             replace_breaks: false,
             include_comments: false,
             include_description: false,
@@ -104,66 +85,40 @@ async function downloadTranslations() {
             placeholder_format: 'i18n',
             escape_percent: false,
             add_newlines: true,
-            bundle_structure: 'messages.%LANG_ISO%.%FORMAT%'
+            bundle_structure: 'messages.%LANG_ISO%.%FORMAT%',
+            use_cache: false, // Ne pas utiliser le cache
+            export_sort: 'first_added' // Trier par ordre d'ajout
         });
 
-        console.log('Got bundle URL:', response.bundle_url);
+        console.log('Got bundle URL:', exportResponse.bundle_url);
         
-        if (response.bundle_url) {
+        if (exportResponse.bundle_url) {
             const zipFile = fs.createWriteStream('translations.zip');
             
-            https.get(response.bundle_url, (res) => {
+            https.get(exportResponse.bundle_url, (res) => {
                 res.pipe(zipFile);
                 
                 zipFile.on('finish', () => {
                     zipFile.close();
                     
                     fs.createReadStream('translations.zip')
-                        .pipe(unzipper.Extract({ path: 'src/locale-temp' }))
+                        .pipe(unzipper.Extract({ path: 'src/locale' }))
                         .on('close', () => {
-                            console.log('Translations downloaded and extracted to src/locale-temp');
+                            console.log('Translations downloaded and extracted to src/locale');
                             
-                            // Filtrer les fichiers téléchargés
-                            if (fs.existsSync('src/locale-temp/messages.ar.xlf')) {
-                                const arContent = fs.readFileSync('src/locale-temp/messages.ar.xlf', 'utf8');
-                                const filteredArContent = filterXlfByValidIds(arContent, validIds);
-                                fs.writeFileSync('src/locale/messages.ar.xlf', filteredArContent);
-                                console.log('Filtered Arabic translations saved to src/locale/messages.ar.xlf');
-                            }
-                            
-                            if (fs.existsSync('src/locale-temp/messages.en.xlf')) {
-                                const enContent = fs.readFileSync('src/locale-temp/messages.en.xlf', 'utf8');
-                                const filteredEnContent = filterXlfByValidIds(enContent, validIds);
-                                fs.writeFileSync('src/locale/messages.en.xlf', filteredEnContent);
-                                console.log('Filtered English translations saved to src/locale/messages.en.xlf');
-                            }
-                            
-                            if (fs.existsSync('src/locale-temp/messages.fr.xlf')) {
-                                const frContent = fs.readFileSync('src/locale-temp/messages.fr.xlf', 'utf8');
-                                const filteredFrContent = filterXlfByValidIds(frContent, validIds);
-                                fs.writeFileSync('src/locale/messages.fr.xlf', filteredFrContent);
-                                console.log('Filtered French translations saved to src/locale/messages.fr.xlf');
-                            }
-                            
-                            // Rename messages.fr.xlf to messages.xlf if needed
-                            if (fs.existsSync('src/locale/messages.fr.xlf') && !fs.existsSync('src/locale/messages.xlf')) {
-                                fs.copyFileSync('src/locale/messages.fr.xlf', 'src/locale/messages.xlf');
-                                console.log('Copied messages.fr.xlf to messages.xlf');
-                            }
+                            // Vérifier que les fichiers ont été téléchargés correctement
+                            const files = fs.readdirSync('src/locale');
+                            console.log('Files in src/locale:', files);
                             
                             // Show content of downloaded files
-                            console.log('Content of filtered Arabic translations:');
+                            console.log('Content of downloaded Arabic translations:');
                             if (fs.existsSync('src/locale/messages.ar.xlf')) {
                                 console.log(fs.readFileSync('src/locale/messages.ar.xlf', 'utf8'));
+                            } else {
+                                console.log('Arabic translations file not found!');
                             }
                             
                             fs.unlink('translations.zip', () => {});
-                            
-                            // Supprimer le dossier temporaire
-                            if (fs.existsSync('src/locale-temp')) {
-                                fs.rmSync('src/locale-temp', { recursive: true, force: true });
-                                console.log('Temporary directory removed');
-                            }
                         });
                 });
             }).on('error', (err) => {

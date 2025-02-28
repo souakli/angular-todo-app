@@ -62,23 +62,25 @@ jobs:
           node upload-translations.mjs
           echo "Only French source file (messages.xlf) uploaded to Lokalise"
 
-      - name: Download translations from Lokalise
+      - name: Wait for Lokalise to process translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        run: |
+          echo "Waiting 30 seconds for Lokalise to process translations..."
+          sleep 30
+          echo "Wait completed, proceeding to download translations"
+
+      - name: Download fresh translations from Lokalise
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
         run: |
-          node download-translations.mjs
+          # Utiliser le script de téléchargement frais
+          node download-fresh-translations.mjs
           echo "Content of downloaded Arabic translations:"
           cat src/locale/messages.ar.xlf
-          echo "Content of local Arabic translations before build:"
-          cat src/locale/messages.ar.xlf
-          
-          # Vérifier que la traduction arabe est bien présente
-          if grep -q "makayen khedma asahbi" src/locale/messages.ar.xlf; then
-            echo " La traduction arabe 'makayen khedma asahbi' est bien présente dans le fichier"
-          else
-            echo " La traduction arabe 'makayen khedma asahbi' n'est PAS présente dans le fichier"
-          fi
+          echo "Content of downloaded English translations:"
+          cat src/locale/messages.en.xlf
+          echo "All translations downloaded fresh from Lokalise"
 
       - name: Build multilingual app
         run: |
@@ -146,7 +148,7 @@ jobs:
           done
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ${{ env.BUILD_PATH }}
 
@@ -159,4 +161,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
