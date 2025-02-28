@@ -105,8 +105,14 @@ jobs:
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           
-          # Pull the latest changes from the remote repository
-          git pull origin ${{ github.ref_name }} --rebase
+          # Stash any unstaged changes to avoid conflicts
+          git stash -u || true
+          
+          # Fetch the latest changes
+          git fetch origin
+          
+          # Reset to match remote branch
+          git reset --hard origin/${{ github.ref_name }}
           
           # Add and commit the translation files
           git add src/locale/messages.*.xlf
@@ -117,6 +123,7 @@ jobs:
             
             # Push directly using the token
             git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+            echo "Translation files committed and pushed successfully"
           else
             echo "No translation changes to commit"
           fi
