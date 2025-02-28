@@ -12,9 +12,9 @@ async function uploadTranslations() {
         console.log('API Key:', apiKey);
         console.log('Project ID:', projectId);
 
-        // Upload French (source) file
+        // Upload French (source) file from messages.xlf
         const frContent = fs.readFileSync('src/locale/messages.xlf', 'base64');
-        console.log('Uploading French translations...');
+        console.log('Uploading French translations from messages.xlf...');
         await client.files().upload(projectId, {
             data: frContent,
             filename: 'messages.xlf',
@@ -25,6 +25,22 @@ async function uploadTranslations() {
             skip_detect_lang_iso: true,
             replace: true
         });
+        
+        // Upload French translations from messages.fr.xlf if it exists
+        if (fs.existsSync('src/locale/messages.fr.xlf')) {
+            const frSpecificContent = fs.readFileSync('src/locale/messages.fr.xlf', 'base64');
+            console.log('Uploading French translations from messages.fr.xlf...');
+            await client.files().upload(projectId, {
+                data: frSpecificContent,
+                filename: 'messages.fr.xlf',
+                lang_iso: 'fr',
+                convert_placeholders: true,
+                cleanup_mode: false,
+                replace_modified: false,
+                skip_detect_lang_iso: true,
+                replace: true
+            });
+        }
 
         // Upload Arabic translations
         const arContent = fs.readFileSync('src/locale/messages.ar.xlf', 'base64');
