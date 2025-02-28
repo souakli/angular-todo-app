@@ -4,43 +4,25 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+    inputs:
+      force:
+        description: 'Force rebuild and deploy'
+        required: false
+        default: 'false'
 
 permissions:
   contents: write
-  actions: write
 
 jobs:
-  cancel-previous:
-    name: Cancel Previous Runs
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.12.0
+      - name: Cancel running workflows
+        uses: andymckay/cancel-action@0.3
         with:
-          access_token: ${{ github.token }}
+          token: ${{ github.token }}
 
-  cancel:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cancel Previous Workflows
-        uses: n1hility/cancel-previous-runs@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: ${{ github.event.workflow.id }}
-
-  build-and-deploy:
-    name: Build and Deploy
-    needs: [cancel-previous, cancel]
-    runs-on: ubuntu-latest
-    steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
