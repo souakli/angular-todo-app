@@ -9,7 +9,7 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
   imports: [CommonModule, RouterOutlet, TodoListComponent],
   template: `
     <div class="app-container">
-      <h1 i18n>Todo List</h1>
+      <h1 i18n>liste des taches</h1>
       <app-todo-list></app-todo-list>
     </div>
   `,
@@ -27,5 +27,11 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
   `]
 })
 export class AppComponent {
-  title = 'Todo List';
+  title = 'angular-todo-app';
+
+  switchLanguage(lang: string) {
+    const currentUrl = window.location.pathname;
+    const baseHref = window.location.origin;
+    window.location.href = `${baseHref}/${lang}/`;
+  }
 }

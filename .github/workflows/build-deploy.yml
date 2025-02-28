@@ -1,0 +1,69 @@
+name: Build and Deploy Multilingual App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  # Permet de lancer le workflow manuellement depuis l'interface GitHub
+  workflow_dispatch:
+
+jobs:
+  i18n-build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      # Étape 1: Extraction des traductions avec format spécifié
+      - name: Extract i18n messages
+        run: ng extract-i18n --output-path src/locale --format=xlf
+
+      # Étape 2: Upload des fichiers de traduction vers un service de traduction (si configuré)
+      - name: Upload translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        run: npm run i18n:upload
+        env:
+          TRANSLATION_API_KEY: ${{ secrets.TRANSLATION_API_KEY }}
+
+      # Étape 3: Download des traductions mises à jour
+      - name: Download translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        run: npm run i18n:download
+        env:
+          TRANSLATION_API_KEY: ${{ secrets.TRANSLATION_API_KEY }}
+
+      # Étape 4: Commit des nouvelles traductions si elles ont changé
+      - name: Commit updated translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/locale/*.xlf
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update translations" && git push)
+
+      # Étape 5: Build de l'application avec toutes les langues
+      - name: Build multilingual app
+        run: npm run build -- --localize
+
+      # Étape 6: Déploiement sur GitHub Pages
+      - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/angular-todo-app/browser
+          branch: gh-pages

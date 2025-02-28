@@ -5,6 +5,14 @@
       <tool tool-id="lokalise.com" tool-name="Lokalise"></tool>
     </header>
     <body>
+      <trans-unit id="8814297195783961848" datatype="html">
+        <source>liste des taches </source>
+        <target>sam's task</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6479879428930588857" datatype="html">
         <source>Nouvelle tâche</source>
         <target>New task</target>
@@ -31,7 +39,7 @@
       </trans-unit>
       <trans-unit id="3470560235497686067" datatype="html">
         <source>Ma Liste de Tâches</source>
-        <target>My task list</target>
+        <target>My tasks</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">14</context>
@@ -53,9 +61,9 @@
           <context context-type="linenumber">24,26</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8814297195783961848" datatype="html">
-        <source>Todo List</source>
-        <target>Todo List</target>
+      <trans-unit id="22603772874977903" datatype="html">
+        <source>liste des taches</source>
+        <target>sam's task liste</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>

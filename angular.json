@@ -28,7 +28,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/fr",
+            "localize": ["fr", "en", "ar"],
+            "outputPath": "dist/angular-todo-app/browser",
+            "baseHref": "/angular-todo-app/",
+            "i18nMissingTranslation": "warning",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -89,19 +92,19 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "angular-todo-app:build:production"
+              "buildTarget": "angular-todo-app:build:production"
             },
             "development": {
-              "browserTarget": "angular-todo-app:build:development"
+              "buildTarget": "angular-todo-app:build:development"
             },
             "fr": {
-              "browserTarget": "angular-todo-app:build:fr"
+              "buildTarget": "angular-todo-app:build:fr"
             },
             "en": {
-              "browserTarget": "angular-todo-app:build:en"
+              "buildTarget": "angular-todo-app:build:en"
             },
             "ar": {
-              "browserTarget": "angular-todo-app:build:ar"
+              "buildTarget": "angular-todo-app:build:ar"
             }
           },
           "defaultConfiguration": "development"
