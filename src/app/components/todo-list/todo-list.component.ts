@@ -11,10 +11,9 @@ import { Todo } from '../../models/todo';
   imports: [CommonModule, TodoFormComponent, TodoItemComponent],
   template: `
     <div class="todo-container">
-      <h1 i18n>Ma Liste de Tâches</h1>
       <app-todo-form></app-todo-form>
       <div class="todo-stats">
-        <p i18n>Total: {{ todos.length }} | Complétées: {{ completedCount }} | En cours: {{ todos.length - completedCount }}</p>
+        <p i18n>Total: {{ todos.length }} | Terminées: {{ completedCount }} | En cours: {{ todos.length - completedCount }}</p>
       </div>
       <div class="todo-list">
         <app-todo-item
@@ -32,11 +31,6 @@ import { Todo } from '../../models/todo';
       max-width: 800px;
       margin: 2rem auto;
       padding: 0 1rem;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 2rem;
     }
     .todo-stats {
       text-align: center;
@@ -58,7 +52,7 @@ import { Todo } from '../../models/todo';
 })
 export class TodoListComponent implements OnInit {
   todos: Todo[] = [];
-  completedCount: number = 0;
+  completedCount = 0;
 
   constructor(private todoService: TodoService) {}
 

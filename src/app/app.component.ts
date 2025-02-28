@@ -9,7 +9,7 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
   imports: [CommonModule, RouterOutlet, TodoListComponent],
   template: `
     <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8 text-center" i18n>My Todo List</h1>
+      <h1 class="text-3xl font-bold mb-8 text-center" i18n>Liste des tâches</h1>
       <app-todo-list></app-todo-list>
     </div>
   `,
@@ -21,6 +21,4 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
     }
   `]
 })
-export class AppComponent {
-  title = 'angular-todo-app';
-}
+export class AppComponent {}

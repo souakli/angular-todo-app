@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Todo } from '../../models/todo';
 import { TodoService } from '../../services/todo.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-todo-item',
@@ -10,88 +10,69 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="todo-item" [class.completed]="todo.completed">
       <div class="todo-content">
-        <div class="todo-header">
+        <input
+          type="checkbox"
+          [checked]="todo.completed"
+          (change)="toggleComplete()"
+          i18n-title
+          title="Marquer comme terminé"
+        >
+        <div class="todo-text">
           <h3>{{ todo.title }}</h3>
-          <span class="todo-date">{{ todo.createdAt | date:'short' }}</span>
+          <p *ngIf="todo.description">{{ todo.description }}</p>
         </div>
-        <p *ngIf="todo.description" class="todo-description">{{ todo.description }}</p>
       </div>
-      <div class="todo-actions">
-        <button (click)="onToggle()" class="todo-button toggle">
-          {{ todo.completed ? '✓' : '○' }}
-        </button>
-        <button (click)="onDelete()" class="todo-button delete">×</button>
-      </div>
+      <button 
+        class="delete-btn" 
+        (click)="deleteTodo()"
+        i18n-title
+        title="Supprimer la tâche"
+      >×</button>
     </div>
   `,
   styles: [`
     .todo-item {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       padding: 1rem;
-      margin: 0.5rem 0;
-      background-color: white;
+      background: white;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
-    .completed {
-      background-color: #f8f8f8;
-      opacity: 0.7;
-    }
-    .completed .todo-content {
-      text-decoration: line-through;
-      color: #666;
     }
     .todo-content {
-      flex-grow: 1;
-      margin-right: 1rem;
-    }
-    .todo-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.5rem;
+      gap: 1rem;
     }
-    .todo-header h3 {
+    .todo-text h3 {
       margin: 0;
       font-size: 1.1rem;
     }
-    .todo-date {
-      font-size: 0.8rem;
+    .todo-text p {
+      margin: 0.5rem 0 0;
       color: #666;
-    }
-    .todo-description {
-      margin: 0;
       font-size: 0.9rem;
-      color: #555;
     }
-    .todo-actions {
-      display: flex;
-      gap: 0.5rem;
+    .completed .todo-text {
+      text-decoration: line-through;
+      color: #999;
     }
-    .todo-button {
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
       cursor: pointer;
-      transition: all 0.3s ease;
     }
-    .toggle {
-      background-color: #4CAF50;
-      color: white;
+    .delete-btn {
+      background: none;
+      border: none;
+      color: #ff4444;
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0 0.5rem;
     }
-    .delete {
-      background-color: #f44336;
-      color: white;
-    }
-    .todo-button:hover {
-      transform: scale(1.1);
+    .delete-btn:hover {
+      color: #ff0000;
     }
   `]
 })
@@ -100,11 +81,11 @@ export class TodoItemComponent {
 
   constructor(private todoService: TodoService) {}
 
-  onToggle() {
+  toggleComplete() {
     this.todoService.toggleTodo(this.todo.id);
   }
 
-  onDelete() {
+  deleteTodo() {
     this.todoService.deleteTodo(this.todo.id);
   }
 }

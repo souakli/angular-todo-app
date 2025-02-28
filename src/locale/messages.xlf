@@ -2,46 +2,60 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="fr" datatype="plaintext" original="ng2.template">
     <body>
+      <trans-unit id="3448536624183784632" datatype="html">
+        <source>Liste des tâches</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.ts</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="6479879428930588857" datatype="html">
         <source>Nouvelle tâche</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2721374329445264606" datatype="html">
         <source>Description (optionnel)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="70397346439942337" datatype="html">
-        <source>Ajouter</source>
+      <trans-unit id="3400870239794908146" datatype="html">
+        <source> Ajouter </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">32,34</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3470560235497686067" datatype="html">
-        <source>Ma Liste de Tâches</source>
+      <trans-unit id="1078665948232333643" datatype="html">
+        <source>Marquer comme terminé</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="7265067825036320518" datatype="html">
-        <source>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Complétées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></source>
+      <trans-unit id="1680693752472612244" datatype="html">
+        <source>Supprimer la tâche</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="1726366989119241897" datatype="html">
+        <source>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Terminées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3062171555746716232" datatype="html">
         <source> Aucune tâche pour le moment. Ajoutez-en une ! </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
-          <context context-type="linenumber">24,26</context>
+          <context context-type="linenumber">23,25</context>
         </context-group>
       </trans-unit>
     </body>

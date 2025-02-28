@@ -48,6 +48,9 @@ jobs:
 
       - name: Extract i18n messages
         run: |
+          # Supprimer l'ancien fichier messages.xlf s'il existe
+          rm -f src/locale/messages.xlf || true
+          # Extraire les nouveaux messages
           npx ng extract-i18n --output-path src/locale --format=xlf
           echo "Messages extracted to messages.xlf"
 
@@ -57,7 +60,7 @@ jobs:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
         run: |
           node upload-translations.mjs
-          echo "Translations uploaded to Lokalise"
+          echo "Only French source file (messages.xlf) uploaded to Lokalise"
 
       - name: Download translations from Lokalise
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'

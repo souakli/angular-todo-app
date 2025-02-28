@@ -50,6 +50,7 @@
           },
           "configurations": {
             "production": {
+              "baseHref": "/angular-todo-app/",
               "localize": true,
               "budgets": [
                 {
@@ -66,6 +67,8 @@
               "outputHashing": "all"
             },
             "development": {
+              "baseHref": "/",
+              "localize": true,
               "buildOptimizer": false,
               "optimization": false,
               "vendorChunk": true,
@@ -80,10 +83,12 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-todo-app:build:production"
+              "buildTarget": "angular-todo-app:build:production",
+              "baseHref": "/angular-todo-app/"
             },
             "development": {
-              "buildTarget": "angular-todo-app:build:development"
+              "buildTarget": "angular-todo-app:build:development",
+              "baseHref": "/"
             }
           },
           "defaultConfiguration": "development"
@@ -102,6 +107,7 @@
               "zone.js/testing"
             ],
             "tsConfig": "tsconfig.spec.json",
+            "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
               "src/assets"
