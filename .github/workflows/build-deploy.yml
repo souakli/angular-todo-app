@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -101,10 +101,18 @@ jobs:
 
       - name: Commit updated translation files
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        uses: stefanzweifel/git-auto-commit-action@v5
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add src/locale/messages.*.xlf
+          git diff --quiet && git diff --staged --quiet || git commit -m "Update translations from Lokalise [skip ci]"
+
+      - name: Push changes
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        uses: ad-m/github-push-action@master
         with:
-          commit_message: "Update translations from Lokalise [skip ci]"
-          file_pattern: "src/locale/messages.*.xlf"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
 
       - name: Build multilingual app
         run: |
