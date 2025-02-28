@@ -54,6 +54,23 @@ jobs:
           npx ng extract-i18n --output-path src/locale --format=xlf
           echo "Messages extracted to messages.xlf"
 
+      - name: Check for Lokalise API Key
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        run: |
+          if [ -z "${{secrets.LOKALISE_API_KEY }}" ]; then
+            echo "::error::LOKALISE_API_KEY is not set in GitHub Secrets. Please add it in your repository settings."
+            echo "1. Go to your repository on GitHub"
+            echo "2. Click on Settings"
+            echo "3. In the left sidebar, click on Secrets and variables > Actions"
+            echo "4. Click on New repository secret"
+            echo "5. Name: LOKALISE_API_KEY"
+            echo "6. Value: Your Lokalise API key"
+            echo "7. Click on Add secret"
+            exit 1
+          else
+            echo "LOKALISE_API_KEY is set. Proceeding with translation operations."
+          fi
+
       - name: Upload translations to Lokalise
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:

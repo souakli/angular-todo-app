@@ -4,12 +4,28 @@ import fs from 'fs';
 import unzipper from 'unzipper';
 
 // Configuration
-const apiKey = process.env.LOKALISE_API_KEY;
+// Pour le développement local, vous pouvez définir une clé API par défaut ici
+// ATTENTION: Ne jamais commit cette clé dans le dépôt public
+const DEFAULT_API_KEY = ''; // Laissez vide pour la production
+const apiKey = process.env.LOKALISE_API_KEY || DEFAULT_API_KEY;
 const projectId = '7835424467bf5c965b0411.50285011';
 
 // Vérification de la clé API
 if (!apiKey) {
-    console.error('LOKALISE_API_KEY environment variable is not set or empty');
+    console.error('ERREUR: La variable d\'environnement LOKALISE_API_KEY n\'est pas définie ou est vide.');
+    console.error('Veuillez définir cette variable dans les secrets GitHub de votre dépôt:');
+    console.error('1. Allez sur GitHub et accédez à votre dépôt angular-todo-app');
+    console.error('2. Cliquez sur "Settings" (Paramètres)');
+    console.error('3. Dans le menu de gauche, cliquez sur "Secrets and variables" puis "Actions"');
+    console.error('4. Cliquez sur "New repository secret"');
+    console.error('5. Nom: LOKALISE_API_KEY');
+    console.error('6. Valeur: Votre clé API Lokalise');
+    console.error('7. Cliquez sur "Add secret"');
+    console.error('');
+    console.error('Pour le développement local, vous pouvez également définir cette variable d\'environnement:');
+    console.error('- Windows (PowerShell): $env:LOKALISE_API_KEY="votre_clé_api"');
+    console.error('- Windows (CMD): set LOKALISE_API_KEY=votre_clé_api');
+    console.error('- Linux/macOS: export LOKALISE_API_KEY="votre_clé_api"');
     process.exit(1);
 }
 
