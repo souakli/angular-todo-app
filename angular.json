@@ -30,7 +30,7 @@
           "options": {
             "outputPath": "dist/angular-todo-app/browser",
             "baseHref": "/angular-todo-app/",
-            "i18nMissingTranslation": "error",
+            "i18nMissingTranslation": "warning",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
