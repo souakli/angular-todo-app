@@ -10,6 +10,11 @@ on:
   # Permet de lancer le workflow manuellement depuis l'interface GitHub
   workflow_dispatch:
 
+# Annule les exécutions en cours du même workflow
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
