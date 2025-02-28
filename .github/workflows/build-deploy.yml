@@ -7,21 +7,39 @@ on:
   pull_request:
     branches:
       - main
-  # Permet de lancer le workflow manuellement depuis l'interface GitHub
   workflow_dispatch:
 
-# Annule les exécutions en cours du même workflow
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: write
+  actions: write
 
 jobs:
-  i18n-build-deploy:
+  cancel-previous:
+    name: Cancel Previous Runs
     runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          access_token: ${{ github.token }}
 
+  cancel:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Workflows
+        uses: n1hility/cancel-previous-runs@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: ${{ github.event.workflow.id }}
+
+  build-and-deploy:
+    name: Build and Deploy
+    needs: [cancel-previous, cancel]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -29,7 +47,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: false
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -38,26 +56,22 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      # Étape 1: Extraction des traductions avec format spécifié
       - name: Extract i18n messages
         run: npx ng extract-i18n --output-path src/locale --format=xlf
 
-      # Étape 2: Upload des fichiers de traduction
       - name: Upload translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
         run: node upload-translations.mjs
 
-      # Étape 3: Download des traductions mises à jour
       - name: Download translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
         run: node download-translations.mjs
 
-      # Étape 4: Commit des nouvelles traductions si elles ont changé
-      - name: Commit updated translations
+      - name: Commit translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         continue-on-error: true
         run: |
@@ -67,19 +81,10 @@ jobs:
           git commit -m "chore: update translations and dependencies" || echo "No changes to commit"
           git push || echo "No changes to push"
 
-      # Étape 5: Build de l'application avec toutes les langues
-      - name: Build multilingual app
+      - name: Build app
         run: npx ng build --localize --configuration=production --base-href=/angular-todo-app/
 
-      # Étape 6: Vérifier la structure des répertoires
-      - name: Check build directory
-        run: |
-          ls -la dist/
-          ls -la dist/angular-todo-app/ || true
-          ls -la dist/browser/ || true
-
-      # Étape 7: Créer le fichier 404.html
-      - name: Create 404.html
+      - name: Create 404 pages
         run: |
           cd dist/angular-todo-app/browser
           for lang in en fr ar; do
@@ -88,8 +93,7 @@ jobs:
             fi
           done
 
-      # Étape 8: Déploiement sur GitHub Pages
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         uses: peaceiris/actions-gh-pages@v3
         with:
