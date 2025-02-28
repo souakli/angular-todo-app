@@ -13,23 +13,24 @@ on:
 
 permissions:
   contents: write
-  actions: write # Nécessaire pour annuler les workflows
+  pages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
     steps:
-      - name: Cancel running workflows
-        uses: styfle/cancel-workflow-action@0.12.0
-        with:
-          workflow_id: ${{ github.event.workflow.id }}
-          access_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          persist-credentials: false
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
@@ -41,50 +42,19 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Extract i18n messages
-        run: npx ng extract-i18n --output-path src/locale --format=xlf
+        run: npx ng extract-i18n --output-path src/locale
 
-      - name: Upload translations
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        env:
-          LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
-        run: node upload-translations.mjs
+      - name: Build
+        run: npm run build -- --localize
 
-      - name: Download translations
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        env:
-          LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
-        run: node download-translations.mjs
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
-      - name: Commit translations
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        continue-on-error: true
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add src/locale/*.xlf package-lock.json
-          git commit -m "chore: update translations and dependencies" || echo "No changes to commit"
-          git push || echo "No changes to push"
-
-      - name: Build app
-        run: npx ng build --localize --configuration=production --base-href=/angular-todo-app/
-
-      - name: Create 404 pages
-        run: |
-          cd dist/angular-todo-app/browser
-          for lang in en fr ar; do
-            if [ -d "$lang" ]; then
-              cp $lang/index.html $lang/404.html
-            fi
-          done
-
-      - name: Deploy
-        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/angular-todo-app/browser
-          enable_jekyll: false
-          allow_empty_commit: true
-          force_orphan: true
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
+          path: 'dist/angular-todo-app/browser'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
