@@ -48,7 +48,7 @@ jobs:
 
       - name: Extract i18n messages
         run: |
-          npx ng extract-i18n
+          npx ng extract-i18n --output-path src/locale --format=xlf
           echo "Messages extracted to messages.xlf"
 
       - name: Upload translations to Lokalise
@@ -70,7 +70,9 @@ jobs:
 
       - name: Build multilingual app
         run: |
-          npm run build -- --configuration=production
+          npm run build -- --configuration=production --localize
+          echo "Build output structure:"
+          ls -R dist/angular-todo-app/browser/
 
       - name: List build output
         run: |
