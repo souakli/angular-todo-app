@@ -51,22 +51,32 @@ jobs:
           npx ng extract-i18n --output-path src/locale --format=xlf
           echo "Messages extracted to messages.xlf"
 
-      - name: Upload translations to Lokalise
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        env:
-          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
-        run: |
-          node upload-translations.mjs
-          echo "Translations uploaded to Lokalise"
+      # Commenté pour utiliser directement les fichiers locaux
+      # - name: Upload translations to Lokalise
+      #   if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+      #   env:
+      #     LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+      #   run: |
+      #     node upload-translations.mjs
+      #     echo "Translations uploaded to Lokalise"
 
-      - name: Download translations from Lokalise
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        env:
-          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+      # - name: Download translations from Lokalise
+      #   if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+      #   env:
+      #     LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+      #   run: |
+      #     node download-translations.mjs
+      #     echo "Content of downloaded Arabic translations:"
+      #     cat src/locale/messages.ar.xlf
+      #     echo "Content of local Arabic translations before build:"
+      #     cat src/locale/messages.ar.xlf
+
+      - name: Show local translation files
         run: |
-          node download-translations.mjs
-          echo "Content of downloaded Arabic translations:"
+          echo "Content of local Arabic translations:"
           cat src/locale/messages.ar.xlf
+          echo "Content of local English translations:"
+          cat src/locale/messages.en.xlf
 
       - name: Build multilingual app
         run: |
