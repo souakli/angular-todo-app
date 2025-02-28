@@ -1,17 +1,15 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { TodoFormComponent } from './components/todo-form/todo-form.component';
 import { TodoListComponent } from './components/todo-list/todo-list.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, TodoFormComponent, TodoListComponent],
+  imports: [CommonModule, RouterOutlet, TodoListComponent],
   template: `
     <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold mb-8 text-center">{{ 'My Todo List' }}</h1>
-      <app-todo-form></app-todo-form>
+      <h1 class="text-3xl font-bold mb-8 text-center" i18n>My Todo List</h1>
       <app-todo-list></app-todo-list>
     </div>
   `,
