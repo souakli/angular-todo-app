@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="6479879428930588857" datatype="html">
         <source>Nouvelle tâche</source>
-        <target>djdid</target>
+        <target>مهمة جديدة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">16</context>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="2721374329445264606" datatype="html">
         <source>Description (optionnel)</source>
-        <target>Description (optionnel)</target>
+        <target>الوصف (اختياري)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">24</context>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="70397346439942337" datatype="html">
         <source>Ajouter</source>
-        <target>zid</target>
+        <target>إضافة</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">27</context>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="3470560235497686067" datatype="html">
         <source>Ma Liste de Tâches</source>
-        <target>lista ta3 la3fayess</target>
+        <target>قائمة مهامي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">14</context>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="7265067825036320518" datatype="html">
         <source>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Complétées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></source>
-        <target>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Complétées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></target>
+        <target>المجموع: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | مكتمل: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | قيد التنفيذ: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">17</context>

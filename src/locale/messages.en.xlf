@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="8412437583237235075" datatype="html">
         <source>liste des taches de sami</source>
-        <target>alice's task list</target>
+        <target>My Todo List</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>
@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="2721374329445264606" datatype="html">
         <source>Description (optionnel)</source>
-        <target>Description</target>
+        <target>Description (optional)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">24</context>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="3470560235497686067" datatype="html">
         <source>Ma Liste de Tâches</source>
-        <target>My tasks</target>
+        <target>My Task List</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">14</context>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="7265067825036320518" datatype="html">
         <source>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Complétées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></source>
-        <target>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Completed: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | In progress: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></target>
+        <target>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Completed: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | In Progress: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">17</context>
