@@ -8,13 +8,14 @@ const client = new LokaliseApi({ apiKey });
 
 async function uploadTranslations() {
     try {
-        console.log('Reading source file...');
-        const filePath = 'src/locale/messages.xlf';
-        const fileContent = fs.readFileSync(filePath, 'base64');
+        // Upload French translations
+        console.log('Reading French source file...');
+        const frFilePath = 'src/locale/messages.xlf';
+        const frFileContent = fs.readFileSync(frFilePath, 'base64');
 
-        console.log('Uploading translations...');
-        const response = await client.files().upload(projectId, {
-            data: fileContent,
+        console.log('Uploading French translations...');
+        const frResponse = await client.files().upload(projectId, {
+            data: frFileContent,
             filename: 'messages.xlf',
             lang_iso: 'fr',
             convert_placeholders: true,
@@ -22,14 +23,37 @@ async function uploadTranslations() {
             apply_tm: true,
             tags: ['angular'],
             format: 'xlf',
-            cleanup_mode: true,
+            cleanup_mode: false,
             replace_modified: true,
             skip_detect_lang_iso: false,
             use_automations: true
         });
 
-        console.log('Response:', response);
-        console.log('Upload successful!');
+        console.log('French upload response:', frResponse);
+
+        // Upload Arabic translations
+        console.log('Reading Arabic translation file...');
+        const arFilePath = 'src/locale/messages.ar.xlf';
+        const arFileContent = fs.readFileSync(arFilePath, 'base64');
+
+        console.log('Uploading Arabic translations...');
+        const arResponse = await client.files().upload(projectId, {
+            data: arFileContent,
+            filename: 'messages.ar.xlf',
+            lang_iso: 'ar',
+            convert_placeholders: true,
+            detect_icu_plurals: true,
+            apply_tm: true,
+            tags: ['angular'],
+            format: 'xlf',
+            cleanup_mode: false,
+            replace_modified: true,
+            skip_detect_lang_iso: false,
+            use_automations: true
+        });
+
+        console.log('Arabic upload response:', arResponse);
+        console.log('All uploads successful!');
     } catch (error) {
         console.error('Error:', error.message);
     }
