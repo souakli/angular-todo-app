@@ -31,7 +31,7 @@ jobs:
 
       # Étape 1: Extraction des traductions avec format spécifié
       - name: Extract i18n messages
-        run: ng extract-i18n --output-path src/locale --format=xlf
+        run: npx ng extract-i18n --output-path src/locale --format=xlf
 
       # Étape 2: Upload des fichiers de traduction vers un service de traduction (si configuré)
       - name: Upload translations
@@ -58,7 +58,7 @@ jobs:
 
       # Étape 5: Build de l'application avec toutes les langues
       - name: Build multilingual app
-        run: npm run build -- --localize --configuration=production
+        run: npx ng build --localize --configuration=production
 
       # Étape 6: Déploiement sur GitHub Pages
       - name: Deploy to GitHub Pages
