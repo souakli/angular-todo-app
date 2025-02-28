@@ -50,7 +50,10 @@ jobs:
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
-        run: node download-translations.mjs
+        run: |
+          node download-translations.mjs
+          echo "Content of downloaded Arabic translations:"
+          cat src/locale/messages.ar.xlf
 
       - name: Build multilingual app
         run: |
