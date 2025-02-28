@@ -4,35 +4,40 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      force:
-        description: 'Force rebuild and deploy'
-        required: false
-        default: 'false'
 
 permissions:
   contents: write
   pages: write
   id-token: write
-  actions: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
+env:
+  BUILD_PATH: ./dist/angular-todo-app/browser
 
 jobs:
-  build-and-deploy:
+  cancel:
+    name: 'Cancel Previous Runs'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          access_token: ${{ github.token }}
+
+  build:
+    needs: cancel
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -42,19 +47,53 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: Extract i18n messages
-        run: npx ng extract-i18n --output-path src/locale
+        run: npx ng extract-i18n --output-path src/locale --format=xlf
 
-      - name: Build
-        run: npm run build -- --localize
+      - name: Upload translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        env:
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+        run: node upload-translations.mjs
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
+      - name: Download translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        env:
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+        run: node download-translations.mjs
+
+      - name: Commit updated translations
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        continue-on-error: true
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add src/locale/*.xlf
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update translations" && git push)
+
+      - name: Build multilingual app
+        run: npm run build -- --localize --base-href=/angular-todo-app/
+
+      - name: Create 404 pages
+        run: |
+          cd dist/angular-todo-app/browser
+          for lang in en fr ar; do
+            if [ -d "$lang" ]; then
+              cp $lang/index.html $lang/404.html
+            fi
+          done
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist/angular-todo-app/browser'
+          path: ${{ env.BUILD_PATH }}
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
