@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration=production --localize",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:angular-todo-app": "node dist/angular-todo-app/server/server.mjs",
