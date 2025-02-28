@@ -58,8 +58,9 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add src/locale/*.xlf
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update translations" && git push)
+          git add src/locale/*.xlf package-lock.json
+          git commit -m "chore: update translations and dependencies" || echo "No changes to commit"
+          git push || echo "No changes to push"
 
       # Étape 5: Build de l'application avec toutes les langues
       - name: Build multilingual app
