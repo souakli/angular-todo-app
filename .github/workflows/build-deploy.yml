@@ -99,20 +99,27 @@ jobs:
           cat src/locale/messages.en.xlf
           echo "All translations downloaded fresh from Lokalise"
 
-      - name: Commit updated translation files
+      - name: Commit and push updated translation files
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
+          
+          # Pull the latest changes from the remote repository
+          git pull origin ${{ github.ref_name }} --rebase
+          
+          # Add and commit the translation files
           git add src/locale/messages.*.xlf
-          git diff --quiet && git diff --staged --quiet || git commit -m "Update translations from Lokalise [skip ci]"
-
-      - name: Push changes
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
+          
+          # Only commit if there are changes
+          if ! git diff --staged --quiet; then
+            git commit -m "Update translations from Lokalise [skip ci]"
+            
+            # Push directly using the token
+            git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+          else
+            echo "No translation changes to commit"
+          fi
 
       - name: Build multilingual app
         run: |
