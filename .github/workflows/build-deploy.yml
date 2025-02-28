@@ -76,10 +76,12 @@ jobs:
       # Étape 7: Créer le fichier 404.html
       - name: Create 404.html
         run: |
-          BUILD_DIR=$(find dist -type d -name "browser" -o -name "angular-todo-app")
-          echo "Build directory found at: $BUILD_DIR"
-          cd $BUILD_DIR
-          cp index.html 404.html
+          cd dist/angular-todo-app/browser
+          for lang in en fr ar; do
+            if [ -d "$lang" ]; then
+              cp $lang/index.html $lang/404.html
+            fi
+          done
 
       # Étape 8: Déploiement sur GitHub Pages
       - name: Deploy to GitHub Pages
