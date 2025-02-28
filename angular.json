@@ -72,18 +72,6 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
-            },
-            "fr": {
-              "localize": ["fr"],
-              "outputPath": "dist/fr"
-            },
-            "en": {
-              "localize": ["en"],
-              "outputPath": "dist/en"
-            },
-            "ar": {
-              "localize": ["ar"],
-              "outputPath": "dist/ar"
             }
           },
           "defaultConfiguration": "production"
@@ -96,18 +84,33 @@
             },
             "development": {
               "buildTarget": "angular-todo-app:build:development"
-            },
-            "fr": {
-              "buildTarget": "angular-todo-app:build:fr"
-            },
-            "en": {
-              "buildTarget": "angular-todo-app:build:en"
-            },
-            "ar": {
-              "buildTarget": "angular-todo-app:build:ar"
             }
           },
           "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "angular-todo-app:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ],
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/styles.scss"
+            ],
+            "scripts": []
+          }
         }
       }
     }
