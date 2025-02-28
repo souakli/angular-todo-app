@@ -42,113 +42,14 @@ jobs:
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
-        run: |
-          echo "const LokaliseApi = require('@lokalise/node-api');
-          const fs = require('fs');
-          const apiKey = process.env.LOKALISE_API_KEY;
-          const projectId = '7835424467bf5c965b0411.50285011';
-          const client = new LokaliseApi({ apiKey });
-          async function uploadTranslations() {
-              try {
-                  console.log('Reading source file...');
-                  const filePath = 'src/locale/messages.xlf';
-                  const fileContent = fs.readFileSync(filePath, 'base64');
-                  console.log('Uploading translations...');
-                  const response = await client.files().upload(projectId, {
-                      data: fileContent,
-                      filename: 'messages.xlf',
-                      lang_iso: 'fr',
-                      convert_placeholders: true,
-                      detect_icu_plurals: true,
-                      apply_tm: true,
-                      tags: ['angular'],
-                      format: 'xlf',
-                      cleanup_mode: true,
-                      replace_modified: true,
-                      skip_detect_lang_iso: false,
-                      use_automations: true
-                  });
-                  console.log('Upload successful!');
-              } catch (error) {
-                  console.error('Error:', error.message);
-                  process.exit(1);
-              }
-          }
-          uploadTranslations();" > upload.cjs
-          node upload.cjs
+        run: node upload-translations.js
 
       # Étape 3: Download des traductions mises à jour
       - name: Download translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
-        run: |
-          echo "const LokaliseApi = require('@lokalise/node-api');
-          const https = require('https');
-          const fs = require('fs');
-          const unzipper = require('unzipper');
-          const path = require('path');
-          const apiKey = process.env.LOKALISE_API_KEY;
-          const projectId = '7835424467bf5c965b0411.50285011';
-          const client = new LokaliseApi({ apiKey });
-          async function downloadTranslations() {
-              try {
-                  console.log('Requesting download from Lokalise...');
-                  const response = await client.files().download(projectId, {
-                      format: 'xlf',
-                      original_filenames: false,
-                      directory_prefix: '',
-                      filter_langs: ['fr', 'en', 'ar'],
-                      export_empty_as: 'skip',
-                      export_sort: 'last_updated_desc',
-                      replace_breaks: false,
-                      include_comments: false,
-                      include_description: false,
-                      include_path: false,
-                      indentation: '2sp',
-                      json_unescaped_slashes: true,
-                      placeholder_format: 'i18n',
-                      escape_percent: false,
-                      add_newlines: true,
-                      yaml_include_root: false,
-                      bundle_structure: '%LANG_ISO%.%FORMAT%'
-                  });
-                  if (response.bundle_url) {
-                      const zipFile = fs.createWriteStream('translations.zip');
-                      https.get(response.bundle_url, (res) => {
-                          res.pipe(zipFile);
-                          zipFile.on('finish', () => {
-                              zipFile.close();
-                              fs.createReadStream('translations.zip')
-                                  .pipe(unzipper.Extract({ path: 'temp_translations' }))
-                                  .on('close', () => {
-                                      if (!fs.existsSync('src/locale')) {
-                                          fs.mkdirSync('src/locale', { recursive: true });
-                                      }
-                                      const tempDir = path.join('temp_translations', 'locale');
-                                      if (fs.existsSync(tempDir)) {
-                                          const files = fs.readdirSync(tempDir);
-                                          files.forEach(file => {
-                                              if (file.endsWith('.xlf')) {
-                                                  const sourcePath = path.join(tempDir, file);
-                                                  const targetPath = path.join('src/locale', `messages.${file}`);
-                                                  fs.copyFileSync(sourcePath, targetPath);
-                                              }
-                                          });
-                                      }
-                                      fs.rmSync('temp_translations', { recursive: true, force: true });
-                                      fs.unlinkSync('translations.zip');
-                                  });
-                          });
-                      });
-                  }
-              } catch (error) {
-                  console.error('Error:', error);
-                  process.exit(1);
-              }
-          }
-          downloadTranslations();" > download.cjs
-          node download.cjs
+        run: node download-translations.js
 
       # Étape 4: Commit des nouvelles traductions si elles ont changé
       - name: Commit updated translations
