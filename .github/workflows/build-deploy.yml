@@ -46,7 +46,20 @@ jobs:
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Download translations
+      - name: Extract i18n messages
+        run: |
+          npx ng extract-i18n
+          echo "Messages extracted to messages.xlf"
+
+      - name: Upload translations to Lokalise
+        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        env:
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+        run: |
+          node upload-translations.mjs
+          echo "Translations uploaded to Lokalise"
+
+      - name: Download translations from Lokalise
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
