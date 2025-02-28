@@ -99,7 +99,7 @@ jobs:
           cat src/locale/messages.en.xlf
           echo "All translations downloaded fresh from Lokalise"
           
-          # Créer un fichier de marqueur pour indiquer que les traductions ont été mises à jour
+          # Créer un fichier marqueur pour indiquer que les traductions ont été mises à jour
           echo "$(date)" > translation_updated_marker.txt
 
       - name: Debug translation files
@@ -111,6 +111,11 @@ jobs:
           git diff -- src/locale/messages.ar.xlf || echo "No differences detected"
           echo "Differences in English translations:"
           git diff -- src/locale/messages.en.xlf || echo "No differences detected"
+          
+          # Sauvegarder les fichiers de traduction modifiés
+          cp src/locale/messages.ar.xlf /tmp/messages.ar.xlf
+          cp src/locale/messages.en.xlf /tmp/messages.en.xlf
+          cp translation_updated_marker.txt /tmp/translation_updated_marker.txt
 
       - name: Commit and push updated translation files
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
@@ -118,14 +123,21 @@ jobs:
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           
-          # Stash any unstaged changes to avoid conflicts
-          git stash -u || true
-          
           # Fetch the latest changes
           git fetch origin
           
           # Reset to match remote branch
           git reset --hard origin/${{ github.ref_name }}
+          
+          # Restaurer les fichiers de traduction modifiés
+          cp /tmp/messages.ar.xlf src/locale/messages.ar.xlf
+          cp /tmp/messages.en.xlf src/locale/messages.en.xlf
+          cp /tmp/translation_updated_marker.txt translation_updated_marker.txt
+          
+          # Vérifier que les fichiers ont été restaurés correctement
+          echo "Contenu restauré des fichiers de traduction:"
+          cat src/locale/messages.ar.xlf | grep -A 2 -B 2 "target"
+          cat src/locale/messages.en.xlf | grep -A 2 -B 2 "target"
           
           # Add all translation files and marker file
           git add src/locale/messages.*.xlf
@@ -139,7 +151,7 @@ jobs:
           git log -1
           
           # Push directly using the token with force flag
-          git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+          git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
           echo "Push completed with status: $?"
           echo "Translation files committed and pushed successfully"
 
