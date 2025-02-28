@@ -13,15 +13,17 @@ on:
 
 permissions:
   contents: write
+  actions: write # Nécessaire pour annuler les workflows
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Cancel running workflows
-        uses: andymckay/cancel-action@0.3
+        uses: styfle/cancel-workflow-action@0.12.0
         with:
-          token: ${{ github.token }}
+          workflow_id: ${{ github.event.workflow.id }}
+          access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout
         uses: actions/checkout@v3
