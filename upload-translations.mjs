@@ -1,61 +1,63 @@
 import { LokaliseApi } from '@lokalise/node-api';
 import fs from 'fs';
 
-const apiKey = '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388';
+const apiKey = process.env.LOKALISE_API_KEY || '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388';
 const projectId = '7835424467bf5c965b0411.50285011';
 
 const client = new LokaliseApi({ apiKey });
 
 async function uploadTranslations() {
     try {
-        // Upload French translations
-        console.log('Reading French source file...');
-        const frFilePath = 'src/locale/messages.xlf';
-        const frFileContent = fs.readFileSync(frFilePath, 'base64');
+        console.log('Starting upload process...');
+        console.log('API Key:', apiKey);
+        console.log('Project ID:', projectId);
 
+        // Upload French (source) file
+        const frContent = fs.readFileSync('src/locale/messages.xlf', 'base64');
         console.log('Uploading French translations...');
-        const frResponse = await client.files().upload(projectId, {
-            data: frFileContent,
+        await client.files().upload(projectId, {
+            data: frContent,
             filename: 'messages.xlf',
             lang_iso: 'fr',
             convert_placeholders: true,
-            detect_icu_plurals: true,
-            apply_tm: true,
-            tags: ['angular'],
-            format: 'xlf',
             cleanup_mode: false,
-            replace_modified: true,
-            skip_detect_lang_iso: false,
-            use_automations: true
+            replace_modified: false,
+            skip_detect_lang_iso: true,
+            replace: true
         });
 
-        console.log('French upload response:', frResponse);
-
         // Upload Arabic translations
-        console.log('Reading Arabic translation file...');
-        const arFilePath = 'src/locale/messages.ar.xlf';
-        const arFileContent = fs.readFileSync(arFilePath, 'base64');
-
+        const arContent = fs.readFileSync('src/locale/messages.ar.xlf', 'base64');
         console.log('Uploading Arabic translations...');
-        const arResponse = await client.files().upload(projectId, {
-            data: arFileContent,
+        await client.files().upload(projectId, {
+            data: arContent,
             filename: 'messages.ar.xlf',
             lang_iso: 'ar',
             convert_placeholders: true,
-            detect_icu_plurals: true,
-            apply_tm: true,
-            tags: ['angular'],
-            format: 'xlf',
             cleanup_mode: false,
-            replace_modified: true,
-            skip_detect_lang_iso: false,
-            use_automations: true
+            replace_modified: false,
+            skip_detect_lang_iso: true,
+            replace: true
         });
 
-        console.log('Arabic upload response:', arResponse);
-        console.log('All uploads successful!');
+        // Upload English translations
+        const enContent = fs.readFileSync('src/locale/messages.en.xlf', 'base64');
+        console.log('Uploading English translations...');
+        await client.files().upload(projectId, {
+            data: enContent,
+            filename: 'messages.en.xlf',
+            lang_iso: 'en',
+            convert_placeholders: true,
+            cleanup_mode: false,
+            replace_modified: false,
+            skip_detect_lang_iso: true,
+            replace: true
+        });
+
+        console.log('Upload completed successfully');
     } catch (error) {
         console.error('Error:', error.message);
+        process.exit(1);
     }
 }
 
