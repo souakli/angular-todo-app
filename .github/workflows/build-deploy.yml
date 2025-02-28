@@ -72,25 +72,54 @@ jobs:
 
       - name: Build multilingual app
         run: |
-          npm run build:prod -- --base-href=/angular-todo-app/
+          npm run build -- --configuration=production
 
-      - name: Verify build output
+      - name: List build output
         run: |
-          ls -la dist/angular-todo-app/browser/
-          echo "Checking language directories..."
-          for lang in fr en ar; do
-            if [ -d "dist/angular-todo-app/browser/$lang" ]; then
-              echo "$lang directory exists"
-              ls -la "dist/angular-todo-app/browser/$lang"
-            else
-              echo "ERROR: $lang directory is missing!"
-            fi
-          done
+          echo "Build output structure:"
+          ls -R dist/angular-todo-app/browser/
 
-      - name: Create 404 pages
+      - name: Create language redirects
         run: |
           cd dist/angular-todo-app/browser
-          for lang in en fr ar; do
+          # Create index.html that redirects to /fr/ by default
+          cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Redirecting...</title>
+              <script>
+                // Get browser language
+                var lang = navigator.language || navigator.userLanguage;
+                lang = lang.split('-')[0];
+                
+                // Map of supported languages
+                var supported = ['fr', 'en', 'ar'];
+                
+                // Default to 'fr' if language not supported
+                if (!supported.includes(lang)) {
+                  lang = 'fr';
+                }
+                
+                // Redirect to appropriate language version
+                window.location.replace('/angular-todo-app/' + lang + '/');
+              </script>
+            </head>
+            <body>
+              <h1>Redirecting to your preferred language...</h1>
+              <p>If you are not redirected, please choose a language:</p>
+              <ul>
+                <li><a href="/angular-todo-app/fr/">Français</a></li>
+                <li><a href="/angular-todo-app/en/">English</a></li>
+                <li><a href="/angular-todo-app/ar/">العربية</a></li>
+              </ul>
+            </body>
+          </html>
+          EOF
+
+          # Create 404.html pages for each language
+          for lang in fr en ar; do
             if [ -d "$lang" ]; then
               cp $lang/index.html $lang/404.html
             fi

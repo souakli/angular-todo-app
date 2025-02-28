@@ -28,10 +28,9 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "localize": ["fr", "en", "ar"],
             "outputPath": "dist/angular-todo-app/browser",
-            "baseHref": "/",
-            "i18nMissingTranslation": "warning",
+            "baseHref": "/angular-todo-app/",
+            "i18nMissingTranslation": "error",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
@@ -51,6 +50,7 @@
           },
           "configurations": {
             "production": {
+              "localize": true,
               "budgets": [
                 {
                   "type": "initial",
