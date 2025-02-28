@@ -30,7 +30,7 @@
           "options": {
             "localize": ["fr", "en", "ar"],
             "outputPath": "dist/angular-todo-app/browser",
-            "baseHref": "/angular-todo-app/",
+            "baseHref": "/",
             "i18nMissingTranslation": "warning",
             "index": "src/index.html",
             "main": "src/main.ts",

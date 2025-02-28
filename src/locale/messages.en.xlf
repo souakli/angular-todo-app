@@ -5,9 +5,9 @@
       <tool tool-id="lokalise.com" tool-name="Lokalise"></tool>
     </header>
     <body>
-      <trans-unit id="8814297195783961848" datatype="html">
-        <source>liste des taches </source>
-        <target>sam's task</target>
+      <trans-unit id="8412437583237235075" datatype="html">
+        <source>liste des taches de sami</source>
+        <target>alice's task list</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>
@@ -61,14 +61,7 @@
           <context context-type="linenumber">24,26</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="22603772874977903" datatype="html">
-        <source>liste des taches</source>
-        <target>sam's task liste</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.ts</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
+      
     </body>
   </file>
 </xliff>

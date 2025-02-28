@@ -4,7 +4,7 @@ import fs from 'fs';
 import unzipper from 'unzipper';
 import path from 'path';
 
-const apiKey = '734e16be07a04592870ce8847b9213ae1c601c6f';
+const apiKey = '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388';
 const projectId = '7835424467bf5c965b0411.50285011';
 
 const client = new LokaliseApi({ apiKey });
@@ -21,8 +21,8 @@ async function downloadTranslations() {
             original_filenames: false,
             directory_prefix: '',
             filter_langs: ['fr', 'en', 'ar'],
-            export_empty_as: 'base',
-            export_sort: 'first_added',
+            export_empty_as: 'skip',
+            export_sort: 'last_updated_desc',
             replace_breaks: false,
             include_comments: false,
             include_description: false,
@@ -31,7 +31,9 @@ async function downloadTranslations() {
             json_unescaped_slashes: true,
             placeholder_format: 'i18n',
             escape_percent: false,
-            add_newlines: true
+            add_newlines: true,
+            yaml_include_root: false,
+            bundle_structure: '%LANG_ISO%.%FORMAT%'
         });
 
         console.log('Download response:', JSON.stringify(response, null, 2));
@@ -102,7 +104,6 @@ async function downloadTranslations() {
         }
     } catch (error) {
         console.error('Error:', error);
-        process.exit(1);
     }
 }
 

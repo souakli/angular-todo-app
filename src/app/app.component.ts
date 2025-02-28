@@ -9,7 +9,7 @@ import { TodoListComponent } from './components/todo-list/todo-list.component';
   imports: [CommonModule, RouterOutlet, TodoListComponent],
   template: `
     <div class="app-container">
-      <h1 i18n>liste des taches</h1>
+      <h1 i18n>liste des taches de sami</h1>
       <app-todo-list></app-todo-list>
     </div>
   `,

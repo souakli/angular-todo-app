@@ -6,8 +6,8 @@
     </header>
     <body>
       <trans-unit id="8814297195783961848" datatype="html">
-        <source>liste des taches </source>
-        <target>liste des taches </target>
+        <source>liste des taches de alice</source>
+        <target>liste des taches de alice</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>
@@ -62,8 +62,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="22603772874977903" datatype="html">
-        <source>liste des taches</source>
-        <target>liste des taches</target>
+        <source>liste des taches de sami</source>
+        <target>liste des taches de sami</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>
