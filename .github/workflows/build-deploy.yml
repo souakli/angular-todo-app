@@ -42,14 +42,14 @@ jobs:
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
-        run: node upload-translations.js
+        run: node upload-translations.mjs
 
       # Étape 3: Download des traductions mises à jour
       - name: Download translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388'
-        run: node download-translations.js
+        run: node download-translations.mjs
 
       # Étape 4: Commit des nouvelles traductions si elles ont changé
       - name: Commit updated translations
