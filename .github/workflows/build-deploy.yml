@@ -50,6 +50,7 @@ jobs:
       # Étape 4: Commit des nouvelles traductions si elles ont changé
       - name: Commit updated translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+        continue-on-error: true
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
