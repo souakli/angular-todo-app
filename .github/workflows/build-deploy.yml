@@ -33,17 +33,17 @@ jobs:
       - name: Extract i18n messages
         run: npx ng extract-i18n --output-path src/locale --format=xlf
 
-      # Étape 2: Upload des fichiers de traduction vers un service de traduction (si configuré)
+      # Étape 2: Upload des fichiers de traduction
       - name: Upload translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        run: npm run i18n:upload
+        run: node upload-translations.js
         env:
           TRANSLATION_API_KEY: ${{ secrets.TRANSLATION_API_KEY }}
 
       # Étape 3: Download des traductions mises à jour
       - name: Download translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        run: npm run i18n:download
+        run: node download-translations.js
         env:
           TRANSLATION_API_KEY: ${{ secrets.TRANSLATION_API_KEY }}
 
