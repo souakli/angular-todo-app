@@ -49,26 +49,11 @@ jobs:
       - name: Extract i18n messages
         run: npx ng extract-i18n --output-path src/locale --format=xlf
 
-      - name: Upload translations
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        env:
-          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
-        run: node upload-translations.mjs
-
       - name: Download translations
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
         env:
           LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
         run: node download-translations.mjs
-
-      - name: Commit updated translations
-        if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
-        continue-on-error: true
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add src/locale/*.xlf
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update translations" && git push)
 
       - name: Build multilingual app
         run: |
