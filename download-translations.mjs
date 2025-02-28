@@ -8,6 +8,13 @@ import { DOMParser, XMLSerializer } from 'xmldom';
 const apiKey = process.env.LOKALISE_API_KEY || '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388';
 const projectId = '7835424467bf5c965b0411.50285011';
 
+// Vérification de la clé API
+if (!apiKey) {
+    console.error('LOKALISE_API_KEY environment variable is not set or empty');
+    process.exit(1);
+}
+
+console.log('Initializing Lokalise API client with API key length:', apiKey ? apiKey.length : 0);
 const client = new LokaliseApi({ apiKey });
 
 // Fonction pour extraire les IDs des trans-units d'un fichier XLF

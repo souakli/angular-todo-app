@@ -4,6 +4,13 @@ import fs from 'fs';
 const apiKey = process.env.LOKALISE_API_KEY || '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388';
 const projectId = '7835424467bf5c965b0411.50285011';
 
+// Vérification de la clé API
+if (!apiKey) {
+    console.error('LOKALISE_API_KEY environment variable is not set or empty');
+    process.exit(1);
+}
+
+console.log('Initializing Lokalise API client with API key length:', apiKey ? apiKey.length : 0);
 const client = new LokaliseApi({ apiKey });
 
 async function uploadTranslations() {
@@ -12,34 +19,45 @@ async function uploadTranslations() {
         console.log('API Key:', apiKey);
         console.log('Project ID:', projectId);
 
-        // Supprimer toutes les clés existantes du projet
-        console.log('Deleting all existing keys from the project...');
+        // Vérifier que le fichier source existe
+        if (!fs.existsSync('src/locale/messages.xlf')) {
+            console.error('Source file src/locale/messages.xlf not found');
+            process.exit(1);
+        }
+        
+        // Supprimer d'abord toutes les clés existantes
+        console.log('Deleting all existing keys in Lokalise...');
         try {
-            // Récupérer toutes les clés existantes
             const keys = await client.keys().list({
                 project_id: projectId,
-                limit: 5000 // Maximum possible
+                limit: 5000
             });
             
             if (keys.items && keys.items.length > 0) {
-                const keyIds = keys.items.map(key => key.key_id);
-                console.log(`Found ${keyIds.length} keys to delete`);
+                console.log(`Found ${keys.items.length} keys to delete`);
                 
-                // Supprimer toutes les clés
-                await client.keys().delete(projectId, keyIds);
-                console.log(`Deleted ${keyIds.length} keys from the project`);
+                // Récupérer tous les IDs de clés
+                const keyIds = keys.items.map(key => key.key_id);
+                
+                // Supprimer les clés
+                await client.keys().delete(projectId, {
+                    keys: keyIds
+                });
+                
+                console.log(`Deleted ${keyIds.length} keys from Lokalise`);
             } else {
-                console.log('No keys found in the project');
+                console.log('No keys found to delete');
             }
-        } catch (deleteError) {
-            console.error('Error deleting keys:', deleteError.message);
-            // Continue with upload even if deletion fails
+        } catch (error) {
+            console.error('Error deleting keys:', error.message);
+            // Continuer malgré l'erreur
         }
-
-        // Upload French (source) file from messages.xlf only
+        
+        // Uploader le fichier source
+        console.log('Uploading source file to Lokalise...');
         const frContent = fs.readFileSync('src/locale/messages.xlf', 'base64');
-        console.log('Uploading French translations from messages.xlf...');
-        await client.files().upload(projectId, {
+        
+        const uploadResponse = await client.files().upload(projectId, {
             data: frContent,
             filename: 'messages.xlf',
             lang_iso: 'fr',
@@ -52,7 +70,9 @@ async function uploadTranslations() {
             detect_icu_plurals: true,
             apply_tm: false 
         });
-
+        
+        console.log('Upload response:', uploadResponse);
+        console.log('Source file uploaded to Lokalise');
         console.log('Upload completed successfully');
     } catch (error) {
         console.error('Error:', error.message);

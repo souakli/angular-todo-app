@@ -7,6 +7,13 @@ import unzipper from 'unzipper';
 const apiKey = process.env.LOKALISE_API_KEY;
 const projectId = '7835424467bf5c965b0411.50285011';
 
+// Vérification de la clé API
+if (!apiKey) {
+    console.error('LOKALISE_API_KEY environment variable is not set or empty');
+    process.exit(1);
+}
+
+console.log('Initializing Lokalise API client with API key length:', apiKey ? apiKey.length : 0);
 const client = new LokaliseApi({ apiKey });
 
 async function downloadFreshTranslations() {
