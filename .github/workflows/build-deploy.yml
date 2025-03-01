@@ -107,20 +107,32 @@ jobs:
           git diff -- src/locale/messages.ar.xlf || echo "No differences detected"
           echo "Differences in English translations:"
           git diff -- src/locale/messages.en.xlf || echo "No differences detected"
+          
+          # Sauvegarder les fichiers de traduction modifiés
+          cp src/locale/messages.ar.xlf /tmp/messages.ar.xlf
+          cp src/locale/messages.en.xlf /tmp/messages.en.xlf
+          cp translation_updated_marker.txt /tmp/translation_updated_marker.txt
 
       - name: Commit and push updated translation files
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           
-          # Stash any unstaged changes to avoid conflicts
-          git stash -u || true
-          
           # Fetch the latest changes
           git fetch origin
           
           # Reset to match remote branch
           git reset --hard origin/${{ github.ref_name }}
+          
+          # Restaurer les fichiers de traduction modifiés
+          cp /tmp/messages.ar.xlf src/locale/messages.ar.xlf
+          cp /tmp/messages.en.xlf src/locale/messages.en.xlf
+          cp /tmp/translation_updated_marker.txt translation_updated_marker.txt
+          
+          # Vérifier que les fichiers ont été restaurés correctement
+          echo "Contenu restauré des fichiers de traduction:"
+          cat src/locale/messages.ar.xlf | grep -A 2 -B 2 "target"
+          cat src/locale/messages.en.xlf | grep -A 2 -B 2 "target"
           
           # Add all translation files and marker file
           git add src/locale/messages.*.xlf
@@ -138,7 +150,7 @@ jobs:
           echo "Push completed with status: $?"
           echo "Translation files committed and pushed successfully"
 
-  build-deploy:
+  build:
     needs: update-translations
     runs-on: ubuntu-latest
     steps:
@@ -234,6 +246,13 @@ jobs:
         with:
           path: ${{ env.BUILD_PATH }}
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
