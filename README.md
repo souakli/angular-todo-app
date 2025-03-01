@@ -1,59 +1,119 @@
-# AngularTodoApp
+# Angular Todo App with Multilingual Support
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
+A simple Todo application built with Angular, featuring multilingual support with translations managed through Lokalise.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- Create, read, update, and delete todo items
+- Multilingual support (French, English, Arabic)
+- Automatic deployment to GitHub Pages
+- Integration with Lokalise for translation management
 
-```bash
-ng serve
-```
+## Development
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Prerequisites
 
-## Code scaffolding
+- Node.js (v18 or later)
+- npm (v8 or later)
+- Angular CLI
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### Setup
 
-```bash
-ng generate component component-name
-```
+1. Clone the repository:
+   ```
+   git clone https://github.com/souakli/angular-todo-app.git
+   cd angular-todo-app
+   ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-```bash
-ng generate --help
-```
+3. Run the development server:
+   ```
+   ng serve
+   ```
 
-## Building
+4. Access the application at `http://localhost:4200/`
 
-To build the project run:
+### Multilingual Development
 
-```bash
-ng build
-```
+This project uses Angular i18n for internationalization. The application is available in:
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+- French (default): `/fr/`
+- English: `/en/`
+- Arabic: `/ar/`
 
-## Running unit tests
+#### Translation Workflow
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+1. Extract translation messages:
+   ```
+   ng extract-i18n
+   ```
 
-```bash
-ng test
-```
+2. Upload translations to Lokalise:
+   ```
+   LOKALISE_API_KEY=your_api_key node upload-translations.mjs
+   ```
 
-## Running end-to-end tests
+3. Download translations from Lokalise:
+   ```
+   LOKALISE_API_KEY=your_api_key node download-translations.mjs
+   ```
 
-For end-to-end (e2e) testing, run:
+4. Build the application with all languages:
+   ```
+   npm run build -- --localize
+   ```
 
-```bash
-ng e2e
-```
+5. Serve the multilingual build:
+   ```
+   npx serve dist/angular-todo-app/browser
+   ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Lokalise Webhook Integration
 
-## Additional Resources
+The application includes a webhook server that automatically triggers the GitHub Actions workflow when translations are updated in Lokalise.
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+### Setup Webhook Server
+
+1. Install dependencies:
+   ```
+   npm install
+   ```
+
+2. Set environment variables:
+   ```
+   export GITHUB_TOKEN=your_github_token
+   export LOKALISE_WEBHOOK_SECRET=your_webhook_secret
+   ```
+
+3. Start the webhook server:
+   ```
+   node webhook-server.js
+   ```
+
+4. Configure Lokalise webhook:
+   - Go to your Lokalise project
+   - Navigate to Settings > Webhooks
+   - Add a new webhook with the URL of your server (e.g., `https://your-server.com/webhook`)
+   - Select events: `project.translation.updated`, `project.translation.proofread`, `project.keys.added`, `project.keys.modified`
+   - Add a secret key (same as `LOKALISE_WEBHOOK_SECRET`)
+   - Save the webhook
+
+### How It Works
+
+1. When translations are updated in Lokalise, it sends a webhook notification to your server
+2. The server verifies the webhook signature and triggers the GitHub Actions workflow
+3. GitHub Actions downloads the latest translations, commits them to the repository, and deploys the updated application
+
+## Deployment
+
+The application is automatically deployed to GitHub Pages when changes are pushed to the main branch or when the workflow is manually triggered.
+
+The deployed application is available at: https://souakli.github.io/angular-todo-app/
+
+## License
+
+This project is licensed under the MIT License.
