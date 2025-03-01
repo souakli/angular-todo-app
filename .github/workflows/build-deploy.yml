@@ -197,7 +197,7 @@ jobs:
           echo "Latest commit on the branch:"
           git log -1
           echo "Checking if translation files were updated in the latest commit:"
-          git show --name-only | grep messages
+          git show --name-only | grep -E 'messages|translation' || echo "No translation files updated in this commit"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
