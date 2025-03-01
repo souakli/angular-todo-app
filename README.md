@@ -74,39 +74,55 @@ This project uses Angular i18n for internationalization. The application is avai
 
 ## Lokalise Webhook Integration
 
-The application includes a webhook server that automatically triggers the GitHub Actions workflow when translations are updated in Lokalise.
+L'application est configurée pour se mettre à jour automatiquement lorsque des traductions sont modifiées dans Lokalise, grâce à l'intégration des webhooks Lokalise avec GitHub Actions.
 
-### Setup Webhook Server
+### Configuration du webhook Lokalise vers GitHub
 
-1. Install dependencies:
-   ```
-   npm install
-   ```
+1. **Créer un token d'accès personnel GitHub**:
+   - Allez dans vos paramètres GitHub > Developer settings > Personal access tokens
+   - Générez un nouveau token avec les permissions `repo`
+   - Copiez ce token, vous en aurez besoin pour configurer le webhook
 
-2. Set environment variables:
-   ```
-   export GITHUB_TOKEN=your_github_token
-   export LOKALISE_WEBHOOK_SECRET=your_webhook_secret
-   ```
+2. **Configurer le webhook dans Lokalise**:
+   - Dans votre projet Lokalise, allez dans Settings > Webhooks
+   - Ajoutez un nouveau webhook avec les paramètres suivants:
+     - URL: `https://api.github.com/repos/souakli/angular-todo-app/dispatches`
+     - Méthode: POST
+     - Format: JSON
+     - Headers:
+       ```
+       Accept: application/vnd.github.v3+json
+       Authorization: token YOUR_GITHUB_TOKEN
+       ```
+       (Remplacez YOUR_GITHUB_TOKEN par votre token personnel GitHub)
+     - Corps de la requête:
+       ```json
+       {
+         "event_type": "lokalise-translation-updated",
+         "client_payload": {
+           "source": "lokalise-webhook",
+           "event": "{{event}}",
+           "project_id": "{{project_id}}"
+         }
+       }
+       ```
+     - Événements à surveiller: `project.translation.updated`, `project.translation.proofread`, `project.keys.added`, `project.keys.modified`
 
-3. Start the webhook server:
-   ```
-   node webhook-server.js
-   ```
+3. **Ajouter le secret Lokalise API Key dans GitHub**:
+   - Allez dans les paramètres de votre dépôt GitHub
+   - Cliquez sur Secrets and variables > Actions
+   - Ajoutez un nouveau secret nommé `LOKALISE_API_KEY` avec votre clé API Lokalise
 
-4. Configure Lokalise webhook:
-   - Go to your Lokalise project
-   - Navigate to Settings > Webhooks
-   - Add a new webhook with the URL of your server (e.g., `https://your-server.com/webhook`)
-   - Select events: `project.translation.updated`, `project.translation.proofread`, `project.keys.added`, `project.keys.modified`
-   - Add a secret key (same as `LOKALISE_WEBHOOK_SECRET`)
-   - Save the webhook
+### Comment ça fonctionne
 
-### How It Works
+1. Quand une traduction est mise à jour dans Lokalise, un webhook est envoyé à GitHub
+2. GitHub Actions reçoit cet événement et déclenche le workflow `Build and Deploy Multilingual App`
+3. Le workflow télécharge les dernières traductions depuis Lokalise
+4. Les traductions sont committées dans le dépôt
+5. L'application est reconstruite avec les nouvelles traductions
+6. L'application mise à jour est déployée sur GitHub Pages
 
-1. When translations are updated in Lokalise, it sends a webhook notification to your server
-2. The server verifies the webhook signature and triggers the GitHub Actions workflow
-3. GitHub Actions downloads the latest translations, commits them to the repository, and deploys the updated application
+Avec cette configuration, vos traductions sont toujours à jour sans aucune intervention manuelle !
 
 ## Deployment
 

@@ -18,6 +18,7 @@ permissions:
 
 env:
   BUILD_PATH: ./dist/angular-todo-app/browser
+  LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
 
 jobs:
   cancel:
@@ -39,6 +40,15 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
+
+      - name: Log webhook event details
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "Webhook event received from Lokalise"
+          echo "Event type: ${{ github.event.action }}"
+          echo "Source: ${{ github.event.client_payload.source }}"
+          echo "Event: ${{ github.event.client_payload.event }}"
+          echo "Project ID: ${{ github.event.client_payload.project_id }}"
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
