@@ -30,6 +30,7 @@
     "@angular/router": "19.1.7",
     "@angular/ssr": "19.1.8",
     "@lokalise/node-api": "^13.2.1",
+    "axios": "^1.8.1",
     "express": "^4.18.2",
     "http-server": "^14.1.1",
     "rxjs": "~7.8.0",
