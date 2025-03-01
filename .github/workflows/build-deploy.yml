@@ -118,6 +118,10 @@ jobs:
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           
+          # Afficher l'état avant toute opération
+          echo "État initial de Git:"
+          git status
+          
           # Fetch the latest changes
           git fetch origin
           
@@ -134,19 +138,27 @@ jobs:
           cat src/locale/messages.ar.xlf | grep -A 2 -B 2 "target"
           cat src/locale/messages.en.xlf | grep -A 2 -B 2 "target"
           
-          # Add all translation files and marker file
-          git add src/locale/messages.*.xlf
-          git add translation_updated_marker.txt
+          # Vérifier l'état après restauration
+          echo "État après restauration:"
+          git status
+          
+          # Forcer l'ajout des fichiers même s'ils sont identiques
+          git add -f src/locale/messages.*.xlf
+          git add -f translation_updated_marker.txt
+          
+          # Vérifier l'état après ajout
+          echo "État après git add:"
+          git status
           
           # Force commit even if git thinks there are no changes
           git commit -m "Update translations from Lokalise [skip ci]" --allow-empty
           
           # Debug information
-          echo "Commit created with status: $?"
+          echo "Commit créé avec statut: $?"
           git log -1
           
-          # Push directly using the token with force flag
-          git push "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
+          # Push avec force pour éviter les rejets
+          git push --force "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
           echo "Push completed with status: $?"
           echo "Translation files committed and pushed successfully"
 
@@ -154,11 +166,26 @@ jobs:
     needs: update-translations
     runs-on: ubuntu-latest
     steps:
+      - name: Wait for GitHub to process the pushed translations
+        run: |
+          echo "Waiting 30 seconds for GitHub to process the pushed translations..."
+          sleep 30
+          echo "Wait completed, proceeding to checkout"
+
       - name: Checkout latest code with updated translations
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
           fetch-depth: 0
+          clean: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show latest commit
+        run: |
+          echo "Latest commit on the branch:"
+          git log -1
+          echo "Checking if translation files were updated in the latest commit:"
+          git show --name-only | grep messages
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
