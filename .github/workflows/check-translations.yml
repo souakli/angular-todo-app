@@ -1,0 +1,55 @@
+name: Check for Translation Updates
+
+on:
+  schedule:
+    # Exécuter toutes les heures
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download fresh translations
+        env:
+          LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+        run: node download-fresh-translations.mjs
+        
+      - name: Check for changes
+        id: check_changes
+        run: |
+          git add src/locale/*.xlf
+          CHANGES=$(git status --porcelain src/locale)
+          if [ -n "$CHANGES" ]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Des mises à jour de traduction ont été trouvées"
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "Aucune mise à jour de traduction trouvée"
+          fi
+
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -m "Mise à jour automatique des traductions depuis Lokalise"
+          git push
