@@ -73,8 +73,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3062171555746716232" datatype="html">
-        <source></source>
-        <target></target>
+        <source>no task to do </source>
+        <target>no task to do </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">23,25</context>
