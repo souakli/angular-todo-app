@@ -1,8 +1,8 @@
 import { LokaliseApi } from '@lokalise/node-api';
 import fs from 'fs';
 
-const apiKey = process.env.LOKALISE_API_KEY || '7cd9343a4ee5bd6c3d2066f4cc9eedc8e6de6388';
-const projectId = '7835424467bf5c965b0411.50285011';
+const apiKey = process.env.LOKALISE_API_KEY || '62ad578a2712b9abe1a4085609de46e9c57ecd86';
+const projectId = '1389701767ce127af09676.45241805';
 
 // Vérification de la clé API
 if (!apiKey) {

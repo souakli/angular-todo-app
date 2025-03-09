@@ -8,7 +8,7 @@ import unzipper from 'unzipper';
 // ATTENTION: Ne jamais commit cette clé dans le dépôt public
 const DEFAULT_API_KEY = ''; // Laissez vide pour la production
 const apiKey = process.env.LOKALISE_API_KEY || DEFAULT_API_KEY;
-const projectId = '7835424467bf5c965b0411.50285011';
+const projectId = '1389701767ce127af09676.45241805';
 
 // Vérification de la clé API
 if (!apiKey) {
