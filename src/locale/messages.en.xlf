@@ -1,60 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2" xsi:schemaLocation="urn:oasis:names:tc:xliff:document:1.2 http://docs.oasis-open.org/xliff/v1.2/os/xliff-core-1.2-strict.xsd">
-  <file original="ng2.template" datatype="plaintext" xml:space="preserve" source-language="fr" target-language="en">
+  <file original="" datatype="plaintext" xml:space="preserve" source-language="en" target-language="en">
+    <header>
+      <tool tool-id="lokalise.com" tool-name="Lokalise"></tool>
+    </header>
+    <body>
+      <trans-unit id="welcome_header">
+        <source>Hello world!</source>
+        <target>Hello world!</target>
+      </trans-unit>
+    </body>
+  </file>
+  <file original="ng2.template" datatype="plaintext" xml:space="preserve" source-language="en" target-language="en">
     <header>
       <tool tool-id="lokalise.com" tool-name="Lokalise"></tool>
     </header>
     <body>
       <trans-unit id="3448536624183784632" datatype="html">
-        <source>Liste des tâches</source>
-        <target>my all tasks </target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6479879428930588857" datatype="html">
-        <source>Nouvelle tâche</source>
-        <target>New task</target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit>
       <trans-unit id="2721374329445264606" datatype="html">
-        <source>Description (optionnel)</source>
-        <target>Desc</target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3400870239794908146" datatype="html">
-        <source> Ajouter </source>
-        <target>add </target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
           <context context-type="linenumber">32,34</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1078665948232333643" datatype="html">
-        <source>Marquer comme terminé</source>
-        <target>Mark task as done</target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
           <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1680693752472612244" datatype="html">
-        <source>Supprimer la tâche</source>
-        <target>i delete a task</target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1726366989119241897" datatype="html">
-        <source>Total: <x id="INTERPOLATION" equiv-text="{{ todos.length }}"/> | Terminées: <x id="INTERPOLATION_1" equiv-text="{{ completedCount }}"/> | En cours: <x id="INTERPOLATION_2" equiv-text="{{ todos.length - completedCount }}"/></source>
+        <source></source>
         <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
@@ -62,8 +73,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="3062171555746716232" datatype="html">
-        <source> Aucune tâche pour le moment. Ajoutez-en une ! </source>
-        <target>there is nothing to do </target>
+        <source></source>
+        <target></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-list/todo-list.component.ts</context>
           <context context-type="linenumber">23,25</context>
