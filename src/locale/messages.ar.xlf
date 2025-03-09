@@ -7,7 +7,7 @@
     <body>
       <trans-unit id="3448536624183784632" datatype="html">
         <source>Liste des tâches</source>
-        <target>ça fonctionne ?12</target>
+        <target>قائمة مهامي</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">12</context>
