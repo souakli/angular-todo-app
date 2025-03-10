@@ -33,7 +33,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="2721374329445264606" datatype="html">
-        <source></source>
+        <source>desc</source>
         <target>Description (optionnel)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-form/todo-form.component.ts</context>
@@ -57,7 +57,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="1680693752472612244" datatype="html">
-        <source></source>
+        <source>delete ya kho</source>
         <target>Supprimer la tâche</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
