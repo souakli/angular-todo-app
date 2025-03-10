@@ -57,8 +57,8 @@
         </context-group>
       </trans-unit>
       <trans-unit id="1680693752472612244" datatype="html">
-        <source>delete ya kho</source>
-        <target>delete ya kho</target>
+        <source>delete</source>
+        <target>delete</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/todo-item/todo-item.component.ts</context>
           <context context-type="linenumber">29</context>
