@@ -180,8 +180,8 @@ jobs:
     steps:
       - name: Wait for GitHub to process the pushed translations
         run: |
-          echo "Waiting 30 seconds for GitHub to process the pushed translations..."
-          sleep 30
+          echo "Waiting 2 seconds for GitHub to process the pushed translations..."
+          sleep 2
           echo "Wait completed, proceeding to checkout"
 
       - name: Checkout latest code with updated translations
