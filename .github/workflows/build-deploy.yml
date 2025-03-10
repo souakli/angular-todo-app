@@ -92,8 +92,8 @@ jobs:
           
       - name: Wait for Lokalise to process translations
         run: |
-          echo "Waiting 30 seconds for Lokalise to process translations..."
-          sleep 30
+          echo "Waiting 5 seconds for Lokalise to process translations..."
+          sleep 5
           echo "Wait completed, proceeding to download translations"
 
       - name: Download fresh translations from Lokalise
